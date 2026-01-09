@@ -1,0 +1,927 @@
+<%# app/views/posts/show.html.erb %>
+
+<%= render 'layouts/home_header' %>
+<style>
+    :root {
+        --magjury-gold: #c9a96e;
+        --magjury-gold-light: #e6d6b8;
+        --magjury-gold-dark: #a8874c;
+        --magjury-dark: #0a0a12;
+        --magjury-dark-light: #1a1a24;
+        --magjury-light: #f8f9fa;
+        --magjury-gray: #e9ecef;
+    }
+    .nav-article.disabled{opacity:.4;cursor:not-allowed;}
+    .avatar-circle{
+        width:50px;
+        height:50px;
+        border-radius:50%;
+        background:var(--magjury-gold);
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:1.8rem;
+        font-weight:600;
+        margin:0 auto;
+     }
+
+    body {
+        background-color: var(--magjury-light);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.7;
+    }
+
+    /* Header */
+    .article-header {
+        background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+        color: white;
+        padding: 100px 0 60px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .article-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+        background-size: 200px;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .article-breadcrumb {
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-item a {
+        color: var(--magjury-gold-light);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: white;
+    }
+
+    .article-badge {
+        background: var(--magjury-gold);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .article-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        line-height: 1.2;
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .author-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid var(--magjury-gold);
+    }
+
+    .author-details h4 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .author-details p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+    /* Navigation */
+    .article-nav {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+    }
+
+    .article-stats {
+        display: flex;
+        gap: 20px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .social-share {
+        display: flex;
+        gap: 10px;
+    }
+
+    .share-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .share-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .share-facebook { background: #3b5998; }
+    .share-twitter { background: #1da1f2; }
+    .share-linkedin { background: #0077b5; }
+    .share-copy { background: var(--magjury-gold); }
+
+    /* Main Content */
+    .article-content {
+        padding: 60px 0;
+    }
+
+    .article-body {
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+    }
+
+    .article-image {
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+
+    .article-image img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .article-image-caption {
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        font-style: italic;
+    }
+
+    .content-section {
+        margin-bottom: 40px;
+    }
+
+    .content-section h2 {
+        color: var(--magjury-dark);
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--magjury-gold);
+    }
+
+    .content-section h3 {
+        color: var(--magjury-dark);
+        font-weight: 600;
+        margin: 30px 0 15px;
+    }
+
+    .highlight-box {
+        background: linear-gradient(135deg, var(--magjury-gold-light) 0%, #f8f9fa 100%);
+        border-left: 4px solid var(--magjury-gold);
+        padding: 25px;
+        border-radius: 10px;
+        margin: 30px 0;
+    }
+
+    .highlight-box p {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--magjury-dark);
+    }
+
+    blockquote {
+        border-left: 4px solid var(--magjury-gold);
+        padding-left: 20px;
+        margin: 30px 0;
+        font-style: italic;
+        color: #6c757d;
+    }
+
+    /* Table */
+    .legal-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .legal-table th {
+        background: var(--magjury-gold);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .legal-table td {
+        padding: 15px;
+        border-bottom: 1px solid var(--magjury-gray);
+    }
+
+    .legal-table tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+
+    /* Tags */
+    .article-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 40px 0;
+        padding-top: 30px;
+        border-top: 1px solid var(--magjury-gray);
+    }
+
+    .tag {
+        background: var(--magjury-gray);
+        color: #495057;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+        background: var(--magjury-gold);
+        color: white;
+    }
+
+    /* Author Bio */
+    .author-bio {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 30px;
+        margin: 40px 0;
+    }
+
+    .author-bio-content {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .author-bio-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid var(--magjury-gold);
+    }
+
+    .author-bio-text h4 {
+        margin: 0 0 10px 0;
+        color: var(--magjury-dark);
+    }
+
+    .author-bio-text p {
+        margin: 0;
+        color: #6c757d;
+    }
+
+    /* Navigation Articles */
+    .article-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin: 50px 0;
+        padding: 30px 0;
+        border-top: 1px solid var(--magjury-gray);
+        border-bottom: 1px solid var(--magjury-gray);
+    }
+
+    .nav-article {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: var(--magjury-dark);
+        transition: color 0.3s ease;
+        max-width: 45%;
+    }
+
+    .nav-article:hover {
+        color: var(--magjury-gold);
+    }
+
+    .nav-article.prev {
+        text-align: left;
+    }
+
+    .nav-article.next {
+        text-align: right;
+        flex-direction: row-reverse;
+    }
+
+    .nav-arrow {
+        font-size: 1.5rem;
+        color: var(--magjury-gold);
+    }
+
+    .nav-content h4 {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+    }
+
+    .nav-content span {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    /* Related Articles */
+    .related-articles {
+        margin: 60px 0;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 40px;
+        color: var(--magjury-dark);
+        text-align: center;
+    }
+
+    .related-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        margin-bottom: 30px;
+    }
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .related-image {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .related-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .related-card:hover .related-image img {
+        transform: scale(1.05);
+    }
+
+    .related-content {
+        padding: 20px;
+    }
+
+    .related-badge {
+        background: var(--magjury-gold);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .related-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .related-title a {
+        color: var(--magjury-dark);
+        text-decoration: none;
+    }
+
+    .related-title a:hover {
+        color: var(--magjury-gold);
+    }
+
+    .related-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin: 60px 0;
+    }
+
+    .comment-form {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+    }
+
+    .comment-list {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .comment-item {
+        padding: 25px 0;
+        border-bottom: 1px solid var(--magjury-gray);
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .comment-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .comment-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .comment-meta h5 {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .comment-meta span {
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    .comment-action {
+        background: none;
+        border: none;
+        color: #6c757d;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .comment-action:hover {
+        color: var(--magjury-gold);
+    }
+
+    .comment-reply {
+        margin-left: 60px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--magjury-gray);
+    }
+
+    /* Footer */
+    .magazine-footer {
+        background: var(--magjury-dark);
+        color: white;
+        padding: 60px 0 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .article-title {
+            font-size: 2.2rem;
+        }
+        
+        .article-body {
+            padding: 30px 20px;
+        }
+        
+        .article-image img {
+            height: 250px;
+        }
+        
+        .nav-content {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .article-navigation {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .nav-article {
+            max-width: 100%;
+        }
+        
+        .author-bio-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .article-header {
+            padding: 80px 0 40px;
+        }
+        
+        .article-title {
+            font-size: 1.8rem;
+        }
+        
+        .article-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+</style>
+
+    <!-- Header -->
+    <header class="article-header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Breadcrumb -->
+                <nav class="article-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i> Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="#">Magazine</a></li>
+                        <li class="breadcrumb-item active"><a href="#"><%= @post.category.name %></a></li>
+                    </ol>
+                </nav>
+
+                <!-- Article Header -->
+                <span class="article-badge"><%= @post.category.name %></span>
+                <h1 class="article-title"> <%= @post.title %></h1>
+                
+                <div class="article-meta">
+                    <div class="author-info">
+                         <% if @post.user.profile.attached? %>
+                            <%= image_tag url_for(@post.cover_image), class: "author-avatar", alt: @post.user.nom_complet %>
+                        <% else %>
+                            <div class="avatar-circle mb-3"><%= @post.user.initiales %></div>
+                        <% end %>
+                        <div class="author-details">
+                            <h4><%=@post.user.nom_complet%></h4>
+                            <p><%=@post.user.profession%></p>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-calendar"></i>
+                        <span>Publié le <%= @post.created_at %></span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-eye"></i>
+                        <span><%= @post.views %> vues</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="article-nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="article-stats">
+                    <div class="stat-item">
+                        <i class="far fa-comments"></i>
+                        <span><%=@post.comments.roots.count %> commentaires</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="far fa-bookmark"></i>
+                        <span>0 sauvegarde</span>
+                    </div>
+                </div>
+                <!-- Partage d’article – remplace ton bloc social-share -->
+                <div class="social-share">
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%= request.original_url %>" target="_blank" rel="noopener" class="share-btn share-facebook" title="Partager sur Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <!-- Twitter -->
+                    <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(@post.title) %>&url=<%= request.original_url %>" target="_blank" rel="noopener" class="share-btn share-twitter" title="Partager sur Twitter">
+                    <i class="fab fa-twitter"></i>
+                    </a>
+
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%= request.original_url %>" target="_blank" rel="noopener" class="share-btn share-linkedin" title="Partager sur LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                    <!-- Copier le lien -->
+                    <button class="share-btn share-copy" onclick="copyArticleLink()" title="Copier le lien">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    </div>
+
+                    <script>
+                    function copyArticleLink() {
+                    navigator.clipboard.writeText('<%= request.original_url %>').then(() => {
+                        alert("Lien copié dans le presse-papiers !");
+                    }).catch(err => {
+                        console.error(err);
+                    });
+                    }
+                    </script>
+                </div>
+            </div>
+        </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="article-content">
+            <div class="row">
+                <!-- Article Body -->
+                <div class="col-lg-8">
+                    <article class="article-body">
+                        <!-- Featured Image -->
+                         <% if @post.cover_image.attached? %>
+                            <div class="article-image">
+                                <p>
+                                    <%= image_tag url_for(@post.cover_image), class: "img-thumbnail" %>
+                                </p>
+                            </div>
+                         <% end %>
+
+                        <!-- Article Content -->
+                        <div class="content-section table-responsive">
+                             <%= raw @post.content %>
+                        </div>
+
+                        
+
+
+                       <div class="article-tags">
+                            <% @post.tags.each do |tag| %>
+                                <%= link_to tag.name, '#', class: 'tag' %>
+                            <% end %>
+                        </div>
+                    
+                        <!-- Author Bio -->
+                        <% if @post.user.bio.present? %>
+                            <div class="author-bio">
+                                <div class="author-bio-content">
+                                <% if @post.user.profile.attached? %>
+                                    <%= image_tag @post.user.profile.variant(resize_to_fill: [80, 80]),
+                                                alt: @post.user.full_name,
+                                                class: "author-bio-avatar" %>
+                                <% else %>
+                                    <img src="https://ui-avatars.com/api/?name=<%= CGI.escape(@post.user.full_name) %>&background=c9a96e&color=fff&size=80"
+                                        alt="<%= @post.user.full_name %>" class="author-bio-avatar">
+                                <% end %>
+
+                                <div class="author-bio-text">
+                                    <h4>À propos de l'auteur</h4>
+                                    <p><%= @post.user.bio %></p>
+                                </div>
+                                </div>
+                            </div>
+                        <% end %>
+                    </article>
+
+                    <!-- Article Navigation -->
+                    <!-- app/views/posts/show.html.erb – navigation réelle -->
+                    <div class="article-navigation">
+                    <% if @prev %>
+                        <%= link_to post_path(@prev), class: 'nav-article prev' do %>
+                        <div class="nav-arrow"><i class="fas fa-arrow-left"></i></div>
+                        <div class="nav-content">
+                            <h4>Article précédent</h4>
+                            <span><%= truncate(@prev.title, length: 50) %></span>
+                        </div>
+                        <% end %>
+                    <% else %>
+                        <span class="nav-article prev disabled">
+                        <div class="nav-arrow"><i class="fas fa-arrow-left"></i></div>
+                        <div class="nav-content">
+                            <h4>Début</h4>
+                            <span>Pas d’article précédent</span>
+                        </div>
+                        </span>
+                    <% end %>
+
+                    <% if @next %>
+                        <%= link_to post_path(@next), class: 'nav-article next' do %>
+                        <div class="nav-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="nav-content">
+                            <h4>Article suivant</h4>
+                            <span><%= truncate(@next.title, length: 50) %></span>
+                        </div>
+                        <% end %>
+                    <% else %>
+                        <span class="nav-article next disabled">
+                        <div class="nav-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="nav-content">
+                            <h4>Fin</h4>
+                            <span>Pas d’article suivant</span>
+                        </div>
+                        </span>
+                    <% end %>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="comments-section" id="comments">
+                        <h3 class="section-title">Commentaires (<%= @post.comments.roots.count %>)</h3>
+
+                        <!-- Formulaire -->
+                        <div class="comment-form" id="comment-form">
+                            <%= render 'comments/form', post: @post, parent_id: nil %>
+                        </div>
+
+                        <!-- Liste -->
+                        <div class="comment-list" id="comment-list">
+                            <%= render @post.comments.roots.includes(:replies) %>
+                        </div>
+                        </div>
+
+                        <script>
+                        /* Partage & copie (déjà présent) */
+                        function copyArticleLink() {
+                        navigator.clipboard.writeText('<%= request.original_url %>').then(() => alert("Lien copié !"));
+                        }
+                        </script>
+                    </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- About Widget -->
+                    <!-- app/views/posts/show.html.erb – carte auteur + bouton modif -->
+                    <div class="sidebar-widget mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                        <% if @post.user.profile.attached? %>
+                            <%= image_tag url_for(@post.user.profile), width: 80, height: 80, crop: :thumb, class: "rounded-circle mb-3", alt: @post.user.nom_complet %>
+                        <% else %>
+                            <div class="avatar-circle mb-3 text-light"><%= @post.user.initiales %></div>
+                        <% end %>
+
+                        <h5><%= @post.user.nom_complet %></h5>
+                        <p class="text-muted"><%=@post.user.profession%></p>
+                        <p class="small"><%= @post.user.posts.published.count %> articles publiés</p>
+
+                        <% if can_edit_post?(@post) %>
+                            <%= link_to 'Modifier l’article', edit_post_path(@post), class: 'btn btn-sm btn-outline-warning mt-2', data: { turbo: false } %>
+                        <% end %>
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- Related Articles -->
+                    <!-- app/views/posts/show.html.erb – articles similaires -->
+                    <% @similar.each do |post| %>
+                        <div class="sidebar-widget">
+                            <h5 class="fw-bold mb-3">Articles similaires</h5>
+                            <div class="related-card">
+                                <div class="related-image">
+                                    <% if post.cover_image.attached? %>
+                                    <%= image_tag url_for(post.cover_image), width: 80, height: 60, crop: :thumb, class: "img-fluid", alt: post.title %>
+                                    <% else %>
+                                    <img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Article" class="img-fluid">
+                                    <% end %>
+                                </div>
+                                <div class="related-content">
+                                    <span class="related-badge"><%= post.category.name %></span>
+                                    <h6 class="related-title">
+                                        <%= link_to post.title, post_path(post) %>
+                                    </h6>
+                                    <div class="related-meta">
+                                        <i class="far fa-comments"></i> <%= post.comments.count %>
+                                        <i class="far fa-eye ms-2"></i> <%= post.views %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+<%= render 'layouts/home_footer' %>
+
+
+<script>
+/* Ajout / réponse / signalement sans reload */
+function toggleReply(id) {
+  const box = document.getElementById('reply-' + id);
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function flagComment(id) {
+  fetch(`/comments/${id}/flag`, {
+    method: 'POST',
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+    }
+  }).then(() => alert('Commentaire signalé'));
+}
+
+/* Soumission Ajax (création) */
+/* Soumission Ajax + vidage + injection */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.comment-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = new FormData(form);
+      const action = form.action;
+
+      const resp = await fetch(action, { 
+        method: 'POST', 
+        body: data, 
+        headers: { 'X-Requested-With': 'XMLHttpRequest' } 
+      });
+
+      if (resp.ok) {
+        // 🔁 Recharge toute la page
+        window.location.reload();
+      } 
+      else {
+        const errHtml = await resp.text();
+        form.insertAdjacentHTML('afterbegin', errHtml);
+      }
+    });
+  });
+});
+
+</script>
+
+<style>
+.replies-list{margin-left:3rem;border-top:1px solid wheat ;padding-left:1rem;}
+.comment-reply{margin-top:1rem;}
+</style>

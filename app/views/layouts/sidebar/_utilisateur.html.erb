@@ -1,0 +1,56 @@
+  <nav class="ux-sidebar" id="uxSidebar">
+        <div class="ux-sidebar-head">
+        <i class="fa fa-layer-group ux-logo"></i>
+        <span class="ux-brand">Tableau de bord</span>
+        <button class="ux-close-btn d-lg-none" id="uxCloseSidebar">
+            <i class="fa fa-times"></i>
+        </button>
+        </div>
+
+        <ul class="ux-nav">
+
+            <li class="ux-nav-item active">
+                <a href="<%=dashboard_index_path%>" class="ux-nav-link">
+                <i class="fa fa-home"></i>
+                <span>Dashboard</span>
+                </a>
+            </li>
+           
+
+            <!-- Compte gestion -->
+            <li class="ux-nav-item has-dropdown">
+                <a href="#" class="ux-nav-link">
+                <i class="fa fa-user"></i>
+                <span>Gestion de compte</span>
+                <i class="fa fa-chevron-down ms-auto"></i>
+                </a>
+                <ul class="ux-dropdown">
+                    <li><a href="<%=user_profile_path%>"><i class="ph ph-user"></i> Mon Profile </a></li>
+                    <li><a href="<%=edit_user_registration_path%>"><i class="ph ph-pencil-simple-line"></i> Modifier compte</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="ux-sidebar-foot">
+        <!-- SWITCH THEME -->
+        <div class="ux-theme-switch">
+            <input type="checkbox" id="uxThemeToggle" />
+            <label for="uxThemeToggle" class="ux-theme-label">
+            <i class="fa fa-sun"></i>
+            <i class="fa fa-moon"></i>
+            <span class="ux-theme-ball"></span>
+            </label>
+        </div>
+        <% if user_signed_in? %>
+            <li class="header-nav-submenu__item mb-5">
+                <%= button_to logout_path, method: :delete, class: "ux-btn-logout", form_class: "d-inline" do %>
+                    <i class="fa fa-right-from-bracket"></i>
+                    Déconnexion
+                <% end %>
+            </li>
+        <% end %>
+        </div>
+  </nav>
+
+  <!-- Overlay mobile -->
+    <div class="ux-overlay d-lg-none" id="uxOverlay"></div>

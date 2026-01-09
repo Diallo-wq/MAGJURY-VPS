@@ -1,0 +1,39 @@
+<!-- app/views/comments/_comment.html.erb -->
+<div class="comment-item" id="comment-<%= comment.id %>">
+  <div class="comment-header">
+    <div class="comment-author">
+        <% if @post.user.profile.attached? %>
+            <%= image_tag url_for(comment.user.profile), width: 50, height: 50, crop: :thumb, class: "comment-avatar", alt: comment.name %>
+        <% else %>
+            <div class="avatar-circle"><%= comment.user&.initiales || comment.guest_name.first.upcase %></div>
+        <% end %>
+        <div class="comment-meta">
+            <h5><%= comment.name %></h5>
+            <span><%= time_ago_in_words(comment.created_at) %> ago</span>
+        </div>
+    </div>
+    <div class="comment-actions">
+        <% if comment.flagged? %>
+            <span style="color: red; font-weight: bold;">
+            ⚠ Commentaire signalé
+            </span>
+        <% else %>
+            <button class="comment-action" onclick="toggleReply(<%= comment.id %>)">Répondre</button>
+            <button class="comment-action" onclick="flagComment(<%= comment.id %>)">Signaler</button>
+        <%end%>
+    </div>
+  </div>
+  <div class="comment-body">
+    <%= simple_format(comment.body) %>
+  </div>
+
+  <!-- Réponses -->
+  <div class="comment-reply" id="reply-<%= comment.id %>" style="display:none;">
+    <%= render 'comments/form', post: @post, parent_id: comment.id %>
+  </div>
+  <% if comment.replies.any? %>
+    <div class="replies-list">
+      <%= render comment.replies %>
+    </div>
+  <% end %>
+</div>

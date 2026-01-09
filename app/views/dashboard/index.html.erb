@@ -1,0 +1,62 @@
+
+<!-- Cartes résumé : DESIGN CAPTIVANT -->
+<div class="bg-white rounded-3 card-margin mt-5">
+  <div class="row gy-4" style="align-items: center;"></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Articles publiés -->
+  <div class="col-12 col-md-6">
+    <div class="ux-card-new ux-card-glow-green">
+      <div class="ux-card-icon-float"><i class="fas fa-newspaper text-primary"></i></div>
+      <div class="ux-card-data">
+        <div class="ux-card-val"><%=@total_post || 0%></div>
+        <div class="ux-card-label">Articles publiés</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Produits publiés -->
+  <div class="col-12 col-md-6">
+    <div class="ux-card-new ux-card-glow-blue">
+      <div class="ux-card-icon-float"><i class="fas fa-box text-success"></i></div>
+      <div class="ux-card-data">
+        <div class="ux-card-val"><%=@total_product || 0%></div>
+        <div class="ux-card-label">Produits publiés</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enchères -->
+  <div class="col-12 col-md-6">
+    <div class="ux-card-new ux-card-glow-orange">
+      <div class="ux-card-icon-float"><i class="fas fa-gavel"></i></div>
+      <div class="ux-card-data">
+        <div class="ux-card-val"><%=@total_enchere || 0%></div>
+        <div class="ux-card-label">Enchères totals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div class="col-12 col-md-6">
+    <div class="ux-card-new ux-card-glow-purple">
+      <div class="ux-card-icon-float"><i class="fas fa-concierge-bell"></i></div>
+      <div class="ux-card-data">
+        <div class="ux-card-val"><%=@total_service || 0%></div>
+        <div class="ux-card-label">Services actifs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offres publiées -->
+  <div class="col-12 col-md-6">
+    <div class="ux-card-new ux-card-glow-teal">
+      <div class="ux-card-icon-float"><i class="fas fa-tag"></i></div>
+      <div class="ux-card-data">
+        <div class="ux-card-val"><%=@total_job_offers || 0%></div>
+        <div class="ux-card-label">Offres publiées</div>
+      </div>
+    </div>
+  </div>
+</div>

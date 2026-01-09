@@ -1,0 +1,147 @@
+<!-- app/views/services/_form.html.erb -->
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><%= service.new_record? ? "Nouveau service" : "Modifier le service" %></h5>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: service, local: true) do |f| %>
+            <% if service.errors.any? %>
+              <div class="alert alert-danger">
+                <ul>
+                  <% service.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <!-- TITRE -->
+            <div class="mb-4">
+              <%= f.label :title, "Titre du service", class: "form-label fw-bold" %>
+              <%= f.text_field :title, class: "form-control", placeholder: "Ex. Rédaction de contrats", required: true %>
+            </div>
+
+            <!-- PRIX + SUFFIXE -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <%= f.label :price, "Prix (#{devise})", class: "form-label fw-bold" %>
+                <div class="input-group">
+                  <span class="input-group-text"><%=devise%></span>
+                  <%= f.number_field :price, class: "form-control", step: 0.01, min: 0 %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :price_suffix, "Suffixe", class: "form-label fw-bold" %>
+                <%= f.text_field :price_suffix, class: "form-control", placeholder: "ex. /heure, /mois, forfait" %>
+              </div>
+            </div>
+
+            <!-- CATÉGORIE -->
+            <div class="mb-4">
+              <%= f.label :category, "Catégorie", class: "form-label fw-bold" %>
+              <%= f.select :category,
+                           options_for_select(Service.categories.keys.map { |k| [k.humanize, k] }, service.category),
+                           { include_blank: "— Aucune —" },
+                           class: "form-select" %>
+            </div>
+
+            <!-- ICÔNE (emoji ou classe CSS) -->
+           <div class="mb-4">
+              <%= f.label :icon, "Icône", class: "form-label fw-bold" %>
+              <!-- champ caché : valeur de l'icône -->
+              <%= f.hidden_field :icon, id: "selectedIcon", value: f.object.icon.presence || "bi-briefcase" %>
+
+              <!-- icône actuelle + bouton pour ouvrir la palette -->
+              <div class="d-flex align-items-center gap-3 mt-2">
+                <div id="iconPreview" class="border rounded p-2 bg-light">
+                  <i id="previewImg" class="<%= f.object.icon.presence || "bi-briefcase" %> fs-2 text-primary"></i>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#iconPickerModal">
+                      Choisir une icône
+                </button>
+              </div>
+            </div>
+
+            <!-- DESCRIPTION (TinyMCE) -->
+            <div class="mb-4">
+              <%= f.label :description, "Description détaillée", class: "form-label fw-bold" %>
+              <%= f.text_area :description, class: "tinymce", value: f.object.description %>
+              <div class="form-text">Minimum 50 caractères recommandés</div>
+            </div>
+
+            <div class="d-grid">
+              <%= f.submit "Sauvegarder", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="iconPickerModal" tabindex="-1" aria-labelledby="iconPickerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="iconPickerLabel">Sélectionnez une icône</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3" id="iconGrid">
+          <!-- 40 icônes les plus courantes pour un cabinet -->
+          <% icons = %w[bi-briefcase bi-calendar-check bi-cash-coin bi-chat-left-text bi-clock
+                        bi-cloud-download bi-currency-euro bi-file-earmark-text bi-folder2-open
+                        bi-gavel bi-gear bi-graph-up bi-hand-thumbs-up bi-headset bi-heart
+                        bi-house bi-laptop bi-lightbulb bi-lock bi-mailbox bi-pencil
+                        bi-phone bi-printer bi-question-circle bi-receipt bi-shield-check
+                        bi-signature bi-telephone bi-tools bi-wallet bi-wrench] %>
+
+          <% icons.each do |ic| %>
+            <div class="col-3 col-md-2 text-center">
+              <button type="button" class="btn btn-outline-secondary btn-sm icon-choice w-100"
+                      data-icon="<%= ic %>" style="font-size: 1.5rem;">
+                <i class="<%= ic %>"></i>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="confirmIcon">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- dans _form.html.erb après le modal -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const selectedInput = document.getElementById('selectedIcon');
+  const previewImg    = document.getElementById('previewImg');
+  const confirmBtn    = document.getElementById('confirmIcon');
+  let tempIcon = selectedInput.value; // icône en cours de sélection
+
+  // Clic sur une icône : mise en surbrillance + mémorisation
+  document.querySelectorAll('.icon-choice').forEach(btn => {
+    btn.addEventListener('click', function () {
+      tempIcon = this.dataset.icon;
+      // retire toutes les surbrillances
+      document.querySelectorAll('.icon-choice').forEach(b => b.classList.remove('btn-primary', 'text-white'));
+      // surbrillance active
+      this.classList.add('btn-primary', 'text-white');
+    });
+  });
+
+  // Validation : on met à jour le champ caché + preview
+  confirmBtn.addEventListener('click', () => {
+    selectedInput.value = tempIcon;
+    previewImg.className = tempIcon + ' fs-2 text-primary';
+    bootstrap.Modal.getInstance(document.getElementById('iconPickerModal')).hide();
+  });
+});
+</script>

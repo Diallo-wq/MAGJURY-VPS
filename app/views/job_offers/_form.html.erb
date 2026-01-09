@@ -1,0 +1,105 @@
+<!-- app/views/job_offers/_form.html.erb -->
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-gradient text-white text-center py-4">
+          <h4 class="mb-0">
+            <i class="bi bi-briefcase-fill me-2"></i>
+            <%= job_offer.new_record? ? "Nouvelle offre d’emploi" : "Modifier l’offre" %>
+          </h4>
+        </div>
+
+        <div class="card-body p-5">
+          <%= form_with(model: job_offer, local: true, html: { multipart: true }) do |f| %>
+            <% if job_offer.errors.any? %>
+              <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <div>
+                  <strong><%= pluralize(job_offer.errors.count, "erreur") %> :</strong>
+                  <ul class="mb-0">
+                    <% job_offer.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- LIGNE 1 : TITRE + ENTREPRISE -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-8">
+                <%= f.label :title, "Intitulé du poste", class: "form-label fw-bold" %>
+                <%= f.text_field :title, class: "form-control form-control-lg", placeholder: "Ex. Avocat droit des affaires H/F", required: true %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :company, "Cabinet / Entreprise", class: "form-label fw-bold" %>
+                <%= f.text_field :company, class: "form-control", placeholder: "CABINET DUPONT" %>
+              </div>
+            </div>
+
+            <!-- LIGNE 2 : LOCALISATION + TÉLÉPHONE -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <%= f.label :location, "Ville / Région", class: "form-label fw-bold" %>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                  <%= f.text_field :location, class: "form-control", placeholder: "Paris, Lyon, Télétravail…" %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :contact_phone, "Contact WhatsApp", class: "form-label fw-bold" %>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
+                  <%= f.telephone_field :contact_phone, class: "form-control", placeholder: "+33 6 12 34 56 78" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- LIGNE 3 : CONTRAT + TÉLÉTRAVAIL + SALAIRE -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-4">
+                <%= f.label :contract_type, "Type de contrat", class: "form-label fw-bold" %>
+                <%= f.select :contract_type, options_for_select(JobOffer.contract_types.keys.map { |k| [JobOffer.human_attribute_name("contract_type.#{k}"), k] }, job_offer.contract_type), {}, class: "form-select" %>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check form-switch mt-md-4 pt-md-2">
+                  <%= f.check_box :remote, class: "form-check-input", id: "remoteSwitch" %>
+                  <%= f.label :remote, "Télétravail possible", class: "form-check-label", for: "remoteSwitch" %>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :salary, "Salaire / Rémunération", class: "form-label fw-bold" %>
+                <%= f.text_field :salary, class: "form-control", placeholder: "45 000 – 65 000 #{devise} brut/an" %>
+              </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="mb-4">
+              <%= f.label :description, "Description du poste", class: "form-label fw-bold" %>
+              <%= f.text_area :description, class: "tinymce", value: f.object.description %>
+              <div class="form-text">Décrivez les missions, le profil recherché, les avantages…</div>
+            </div>
+
+            <!-- STATUT -->
+            <div class="mb-4">
+              <%= f.label :active, "Visibilité", class: "form-label fw-bold" %>
+              <%= f.select :active, options_for_select(JobOffer.actives.keys.map { |k| [JobOffer.human_attribute_name("active.#{k}"), k] }, job_offer.active), {}, class: "form-select" %>
+              <div class="form-text">
+                <span class="badge bg-success">publiée</span> visible par tous ·
+                <span class="badge bg-secondary">archivée</span> masquée
+              </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="d-flex justify-content-end gap-3 mt-5">
+              <%= link_to "Annuler", job_offers_path, class: "btn btn-outline-secondary btn-lg px-4" %>
+              <%= f.submit "Enregistrer", class: "btn btn-warning btn-lg px-5" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

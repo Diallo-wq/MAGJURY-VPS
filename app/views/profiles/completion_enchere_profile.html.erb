@@ -1,0 +1,55 @@
+<!-- app/views/profiles/completion_enchere_profile.html.erb -->
+<div class="container mt-5">
+  <h2>Finalisez votre profil enchérisseur</h2>
+  <p class="text-muted">Tous les champs sont obligatoires pour pouvoir enchérir.</p>
+
+  <%= form_with model: current_user,
+                url: save_enchere_profile_profile_path(current_user),
+                method: :patch,
+                local: true,
+                html: { multipart: true } do |f| %>
+
+    <% if current_user.errors.any? %>
+      <div class="alert alert-danger">
+        <ul>
+          <% current_user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <%= f.label :nom, "Nom" %>
+        <%= f.text_field :nom, class: "form-control", required: true %>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <%= f.label :prenom, "Prénom" %>
+        <%= f.text_field :prenom, class: "form-control", required: true %>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :phone, "Téléphone" %>
+      <%= f.telephone_field :phone, class: "form-control", required: true %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :address, "Adresse complet" %>
+      <%= f.text_area :address, class: "form-control", rows: 3, required: true %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :profile, "Photo de profil" %>
+      <%= f.file_field :profile, class: "form-control", accept: "image/*" %>
+      <% if current_user.profile.present? %>
+        <p class="mt-2">Image actuelle :</p>
+        <%= image_tag current_user.profile.url, class: "img-thumbnail", width: 150 %>
+      <% end %>
+    </div>
+
+    <%= f.submit "Valider mon profil", class: "btn btn-success" %>
+  <% end %>
+</div>

@@ -1,0 +1,823 @@
+<%= render 'layouts/home_header' %>
+    <style>
+        :root {
+            --magjury-gold: #c9a96e;
+            --magjury-gold-light: #e6d6b8;
+            --magjury-gold-dark: #a8874c;
+            --magjury-dark: #0a0a12;
+            --magjury-dark-light: #1a1a24;
+            --magjury-light: #f8f9fa;
+            --magjury-gray: #e9ecef;
+            --success: #25D366;
+            --whatsapp: #25D366;
+            --telegram: #0088cc;
+            --linkedin: #0077b5;
+        }
+
+        body {
+            background-color: var(--magjury-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+        }
+
+        /* Header */
+        .contact-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            padding: 80px 0;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            margin-bottom: 30px;
+            border: 2px solid transparent;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--magjury-gold);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--magjury-gold) 0%, var(--magjury-gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .contact-icon.whatsapp {
+            background: linear-gradient(135deg, var(--whatsapp) 0%, #128C7E 100%);
+        }
+
+        .contact-icon.telegram {
+            background: linear-gradient(135deg, var(--telegram) 0%, #005f8c 100%);
+        }
+
+        .contact-icon.linkedin {
+            background: linear-gradient(135deg, var(--linkedin) 0%, #005f8c 100%);
+        }
+
+        .contact-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--magjury-dark);
+        }
+
+        .contact-info {
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .contact-details {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--magjury-dark);
+            margin-bottom: 20px;
+        }
+
+        .response-time {
+            font-size: 0.9rem;
+            color: var(--magjury-gold);
+            font-weight: 600;
+        }
+
+        /* Formulaire de Contact */
+        .contact-form-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--magjury-gray);
+        }
+
+        .form-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--magjury-dark);
+        }
+
+        .form-subtitle {
+            color: #6c757d;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .form-floating .form-control {
+            border-radius: 12px;
+            border: 2px solid var(--magjury-gray);
+            padding: 16px 20px;
+            height: 60px;
+        }
+
+        .form-floating textarea.form-control {
+            height: 120px;
+            resize: none;
+        }
+
+        .form-floating .form-control:focus {
+            border-color: var(--magjury-gold);
+            box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.25);
+        }
+
+        .form-floating label {
+            padding: 16px 20px;
+            color: #6c757d;
+        }
+
+        /* Informations de Contact */
+        .info-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            margin-bottom: 30px;
+        }
+
+        .info-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--magjury-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-title i {
+            color: var(--magjury-gold);
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--magjury-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-list i {
+            color: var(--magjury-gold);
+            width: 20px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .faq-item {
+            border: none;
+            border-bottom: 1px solid var(--magjury-gray);
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            background: none;
+            border: none;
+            padding: 20px 0;
+            font-weight: 600;
+            color: var(--magjury-dark);
+            text-align: left;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--magjury-gold);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question[aria-expanded="true"] i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 0 20px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--magjury-gold) 0%, var(--magjury-gold-dark) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .contact-footer {
+            background: var(--magjury-dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contact-header {
+                padding: 80px 0 40px;
+            }
+            
+            .form-card {
+                padding: 30px 25px;
+            }
+            
+            .form-title {
+                font-size: 1.8rem;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .contact-card {
+                padding: 30px 20px;
+            }
+            
+            .contact-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+
+    <!-- Header -->
+    <header class="contact-header">
+        <div class="container">
+            <div class="header-content text-center">
+                <h1 class="display-4 fw-bold mb-3">Contactez MAGJURY</h1>
+                <p class="lead mb-4">Nous sommes à votre écoute pour répondre à toutes vos questions</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <p class="mb-4">Que vous ayez besoin de conseils juridiques, d'informations sur nos services, ou que vous souhaitiez rejoindre notre équipe, n'hésitez pas à nous contacter par le moyen de votre choix.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contact Grid -->
+    <section class="contact-grid">
+        <div class="container">
+            <div class="row">
+                <!-- Téléphone -->
+                <% if SiteSetting.current.tel1.present? %>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="contact-card">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <h3 class="contact-title">Appelez-nous</h3>
+                        <p class="contact-info">Discutez directement avec nos conseillers juridiques pour des réponses immédiates.</p>
+                        <div class="contact-details"><%= SiteSetting.current.tel1 %></div>
+                        <div class="response-time">Lun - Ven: 9h-18h • Sam: 9h-12h</div>
+                        <button class="btn btn-warning mt-3" onclick="callNumber()">
+                            <i class="fas fa-phone me-2"></i>Appeler maintenant
+                        </button>
+                        </div>
+                    </div> 
+                    <% end %>
+
+                    <!-- Email -->
+                    <% if SiteSetting.current.site_email.present? %>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="contact-card">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <h3 class="contact-title">Envoyez un email</h3>
+                            <p class="contact-info">Pour les demandes détaillées, joignez-nous par email avec tous les documents nécessaires.</p>
+                            <div class="contact-details"><%= SiteSetting.current.site_email %></div>
+                            <div class="response-time">Réponse sous 24h</div>
+                            <button class="btn btn-warning mt-3" onclick="sendEmail()">
+                                <i class="fas fa-envelope me-2"></i>Envoyer un email
+                            </button>
+                            </div>
+                        </div>
+                    <% end %>
+
+                    <!-- WhatsApp -->
+                    <% if SiteSetting.current.whatsapp.present? %>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="contact-card">
+                            <div class="contact-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+                            <h3 class="contact-title">WhatsApp</h3>
+                            <p class="contact-info">Échangez en direct avec nos experts via WhatsApp pour des conseils rapides.</p>
+                            <div class="contact-details"><%= SiteSetting.current.whatsapp %></div>
+                            <div class="response-time">Réponse instantanée</div>
+                            <button class="btn btn-success mt-3" onclick="openWhatsApp()">
+                                <i class="fab fa-whatsapp me-2"></i>Ouvrir WhatsApp
+                            </button>
+                            </div>
+                        </div>
+                    <% end %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de Contact -->
+    <section class="contact-form-section d-none">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="form-card">
+                        <h2 class="form-title text-center">Formulaire de Contact</h2>
+                        <p class="form-subtitle text-center">Remplissez ce formulaire et nous vous recontacterons dans les plus brefs délais</p>
+                        
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input type="text" class="form-control" id="firstName" placeholder="Votre prénom" required>
+                                        <label for="firstName"><i class="fas fa-user me-2"></i>Prénom *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input type="text" class="form-control" id="lastName" placeholder="Votre nom" required>
+                                        <label for="lastName"><i class="fas fa-user me-2"></i>Nom *</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input type="email" class="form-control" id="email" placeholder="Votre email" required>
+                                        <label for="email"><i class="fas fa-envelope me-2"></i>Email *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input type="tel" class="form-control" id="phone" placeholder="Votre téléphone">
+                                        <label for="phone"><i class="fas fa-phone me-2"></i>Téléphone</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <select class="form-select" id="subject" required>
+                                    <option value="">Choisir un sujet</option>
+                                    <option>Demande de renseignements</option>
+                                    <option>Consultation juridique</option>
+                                    <option>Service de rédaction</option>
+                                    <option>Formation professionnelle</option>
+                                    <option>Recrutement</option>
+                                    <option>Partenariat</option>
+                                    <option>Autre</option>
+                                </select>
+                                <label for="subject"><i class="fas fa-tag me-2"></i>Sujet *</label>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <textarea class="form-control" id="message" placeholder="Votre message" style="height: 150px;" required></textarea>
+                                <label for="message"><i class="fas fa-comment me-2"></i>Message *</label>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Moyen de contact préféré</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="contactPref" id="prefEmail" checked>
+                                        <label class="form-check-label" for="prefEmail">
+                                            <i class="fas fa-envelope me-1"></i>Email
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="contactPref" id="prefPhone">
+                                        <label class="form-check-label" for="prefPhone">
+                                            <i class="fas fa-phone me-1"></i>Téléphone
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="contactPref" id="prefWhatsApp">
+                                        <label class="form-check-label" for="prefWhatsApp">
+                                            <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="privacyPolicy" required>
+                                <label class="form-check-label" for="privacyPolicy">
+                                    J'accepte la <a href="#" class="text-warning">politique de confidentialité</a> et le traitement de mes données *
+                                </label>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-warning btn-lg px-5">
+                                    <i class="fas fa-paper-plane me-2"></i>
+                                    Envoyer le message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Informations de Contact -->
+    <section class="info-section d-none">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="info-card">
+                        <h4 class="info-title">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Nos bureaux
+                        </h4>
+                        <ul class="info-list">
+                            <li>
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <strong>Siège Social</strong><br>
+                                    123 Avenue des Champs-Élysées<br>
+                                    75008 Paris, France
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <strong>Bureau Lyon</strong><br>
+                                    45 Rue de la République<br>
+                                    69002 Lyon, France
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <strong>Bureau Marseille</strong><br>
+                                    78 Canebière<br>
+                                    13001 Marseille, France
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="info-card">
+                        <h4 class="info-title">
+                            <i class="fas fa-clock"></i>
+                            Horaires d'ouverture
+                        </h4>
+                        <ul class="info-list">
+                            <li>
+                                <i class="fas fa-calendar-day"></i>
+                                <div>
+                                    <strong>Lundi - Vendredi</strong><br>
+                                    9h00 - 18h00
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-calendar-day"></i>
+                                <div>
+                                    <strong>Samedi</strong><br>
+                                    9h00 - 12h00
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-calendar-day"></i>
+                                <div>
+                                    <strong>Dimanche</strong><br>
+                                    Fermé
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-exclamation-circle"></i>
+                                <div>
+                                    <strong>Urgences juridiques</strong><br>
+                                    Disponible 24h/24
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="info-card">
+                        <h4 class="info-title">
+                            <i class="fas fa-users"></i>
+                            Départements
+                        </h4>
+                        <ul class="info-list">
+                            <li>
+                                <i class="fas fa-gavel"></i>
+                                <div>
+                                    <strong>Consulting Juridique</strong><br>
+                                    consulting@magjury.com
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-file-contract"></i>
+                                <div>
+                                    <strong>Rédaction d'Actes</strong><br>
+                                    redaction@magjury.com
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <div>
+                                    <strong>Formations</strong><br>
+                                    formations@magjury.com
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-briefcase"></i>
+                                <div>
+                                    <strong>Recrutement</strong><br>
+                                    rh@magjury.com
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-3">Questions Fréquentes</h2>
+                        <p class="lead">Trouvez rapidement des réponses à vos questions</p>
+                    </div>
+                    
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Quel est le délai de réponse pour une consultation juridique ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq1" class="collapse faq-answer">
+                                Nous nous engageons à répondre à toute demande de consultation sous 24 heures ouvrées. Pour les urgences juridiques, un conseiller est disponible 24h/24 via notre numéro dédié.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Proposez-vous des consultations gratuites ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq2" class="collapse faq-answer">
+                                Oui, nous proposons une première consultation d'évaluation gratuite de 30 minutes pour analyser votre situation et vous orienter vers la solution la plus adaptée.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Comment se déroule une consultation à distance ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq3" class="collapse faq-answer">
+                                Les consultations à distance se font par visioconférence sécurisée. Vous recevrez un lien de connexion après prise de rendez-vous. Tous les documents peuvent être partagés via notre plateforme sécurisée.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Quelles sont vos zones d'intervention ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq4" class="collapse faq-answer">
+                                Nous intervenons sur toute la France métropolitaine. Nos consultations à distance nous permettent d'accompagner des clients dans le monde entier pour les questions de droit français et international.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Besoin d'une aide immédiate ?</h2>
+            <p class="cta-description">Notre équipe d'urgence juridique est disponible 24h/24 pour les situations critiques</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <button class="btn btn-light btn-lg" onclick="callEmergency()">
+                    <i class="fas fa-phone me-2"></i>
+                    Urgence 24h/24
+                </button>
+                <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                    <i class="fas fa-calendar me-2"></i>
+                    RDV Immédiat
+                </button>
+            </div>
+        </div>
+    </section>
+
+<%= render 'layouts/home_footer' %>
+
+    <!-- Modal Rendez-vous -->
+    <div class="modal fade" id="appointmentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Prendre un rendez-vous</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Date souhaitée *</label>
+                                    <input type="date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Heure *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Choisir une heure</option>
+                                        <option>09:00</option>
+                                        <option>10:00</option>
+                                        <option>11:00</option>
+                                        <option>14:00</option>
+                                        <option>15:00</option>
+                                        <option>16:00</option>
+                                        <option>17:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type de consultation *</label>
+                            <select class="form-select" required>
+                                <option value="">Choisir un type</option>
+                                <option>Consultation en cabinet</option>
+                                <option>Visioconférence</option>
+                                <option>Téléphonique</option>
+                                <option>Urgence juridique</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message (optionnel)</label>
+                            <textarea class="form-control" rows="3" placeholder="Précisez l'objet de votre consultation..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning">Confirmer le RDV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Valeurs sorties côté serveur (échappées une fois, pas besoin de JSON.stringify)
+        const CONTACT_TEL1  = "<%= j SiteSetting.current.tel1.to_s %>";
+        const CONTACT_TEL2  = "<%= j SiteSetting.current.tel2.to_s %>";
+        const CONTACT_EMAIL = "<%= j SiteSetting.current.site_email.to_s %>";
+        const CONTACT_WA    = "<%= j SiteSetting.current.whatsapp.to_s %>";
+
+        // Fonctions de contact
+        function callNumber() {
+            if (!CONTACT_TEL1) return;
+            if (confirm(`Appeler le ${CONTACT_TEL1} ?`)) {
+            window.location.href = `tel:${CONTACT_TEL1.replace(/\s/g,'')}`;
+            }
+        }
+
+        function callEmergency() {
+            if (!CONTACT_TEL2) return;
+            if (confirm(`Appeler le numéro d'urgence 24h/24 (${CONTACT_TEL2}) ?`)) {
+            window.location.href = `tel:${CONTACT_TEL2.replace(/\s/g,'')}`;
+            }
+        }
+
+        function sendEmail() {
+            if (!CONTACT_EMAIL) return;
+            const subject = "Demande d'information";
+            const body    = "Bonjour,\n\nJ'aimerais obtenir des informations concernant...";
+            window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function openWhatsApp() {
+            if (!CONTACT_WA) return;
+            const msg = "Bonjour, je souhaite obtenir des informations sur vos services juridiques.";
+            window.open(`https://wa.me/${CONTACT_WA.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+
+         //function openTelegram() {
+         //    window.open('https://t.me/magjury_support', '_blank');
+         //}
+
+         //function openLinkedIn() {
+           //  window.open('https://linkedin.com/company/magjury', '_blank');
+         //}
+
+         //function openTwitter() {
+         //    window.open('https://twitter.com/magjury', '_blank');
+         //}
+
+         //function openFacebook() {
+          //   window.open('https://facebook.com/magjury', '_blank');
+         //}
+
+      </script>

@@ -1,0 +1,500 @@
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3c55ff;
+            --primary-dark: #243246ff;
+            --primary-light: #4a6b78ff;
+            --accent: #6b7280;
+            --light: #f8f9fa;
+            --dark: #1f2937;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --gray-dark: #374151;
+            --border-radius: 12px;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: card-appear 0.6s ease-out;
+            border: 1px solid var(--gray-light);
+        }
+
+        @keyframes card-appear {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -40px;
+            right: -40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo i {
+            font-size: 28px;
+            margin-right: 12px;
+            opacity: 0.95;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .card-header p {
+            opacity: 0.9;
+            font-size: 15px;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+        }
+
+        .card-body {
+            padding: 40px 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            transition: var(--transition);
+            font-size: 15px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 1.5px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            background: white;
+            color: var(--dark);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+        }
+
+        input[type="email"]:focus + i,
+        input[type="password"]:focus + i {
+            color: var(--primary);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .remember-me label {
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-dark);
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-dark);
+        }
+
+        .login-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .login-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 85, 48, 0.2);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button.loading {
+            pointer-events: none;
+        }
+
+        .button-text {
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .auth-links p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 14px;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        .auth-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        .alert {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .alert-notice {
+            background: #f0f9ff;
+            color: #0369a1;
+            border-color: #bae6fd;
+        }
+
+        .alert-alert {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        /* Style pour les liens partagés Devise */
+        .shared-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .shared-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 14px;
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .shared-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                max-width: 100%;
+                border-radius: 10px;
+            }
+            
+            .card-body {
+                padding: 32px 24px;
+            }
+            
+            .card-header {
+                padding: 28px 24px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .forgot-password {
+                align-self: flex-end;
+            }
+        }
+
+        /* Amélioration de l'accessibilité */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+    <div class="login-card">
+        <div class="card-header">
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <h1>Magjury</h1>
+            </div>
+            <p>Accédez à votre espace professionnel</p>
+        </div>
+        
+        <div class="card-body">
+            <!-- Messages d'alerte -->
+            <% if notice %>
+                <div class="alert alert-notice">
+                    <i class="fas fa-info-circle"></i> <%= notice %>
+                </div>
+            <% end %>
+            
+            <% if alert %>
+                <div class="alert alert-alert">
+                    <i class="fas fa-exclamation-triangle"></i> <%= alert %>
+                </div>
+            <% end %>
+
+            <!-- Formulaire Devise -->
+            <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }, html: { class: "devise-form" }) do |f| %>
+                <div class="form-group">
+                    <label for="user_email">Adresse email</label>
+                    <div class="input-with-icon">
+                        <%= f.input :email,
+                                    required: false,
+                                    autofocus: true,
+                                    label: false,
+                                    input_html: { 
+                                        autocomplete: "email",
+                                        class: "form-input",
+                                        placeholder: "votre@email.com"
+                                    } %>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="user_password">Mot de passe</label>
+                    <div class="input-with-icon">
+                        <%= f.input :password,
+                                    required: false,
+                                    label: false,
+                                    input_html: { 
+                                        autocomplete: "current-password",
+                                        class: "form-input",
+                                        placeholder: "Votre mot de passe"
+                                    } %>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <% if devise_mapping.rememberable? %>
+                        <div class="remember-me">
+                            <%= f.input :remember_me, 
+                                        as: :boolean, 
+                                        label: false,
+                                        input_html: { class: "remember-checkbox" } %>
+                            <label for="user_remember_me">Se souvenir de moi</label>
+                        </div>
+                    <% end %>
+                    
+                    <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "forgot-password" %>
+                </div>
+
+                <div class="form-actions">
+                    <%= f.submit "Se connecter",
+                                class: "login-button",
+                                id: "submit-btn",
+                                data: { disable_with: false } %>
+                </div>
+            <% end %>
+
+            <div class="auth-links">
+                <p>Vous n'avez pas de compte ?</p>
+                <%= link_to "Créer un compte", signup_path %>
+            </div>
+
+            <div class="shared-links">
+                <!-- Liens supplémentaires Devise si nécessaire -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submit-btn');
+            const buttonText = submitBtn.querySelector('.button-text');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            const form = document.querySelector('.devise-form');
+            
+            // Animation d'entrée pour les éléments du formulaire
+            const formElements = document.querySelectorAll('.form-group, .form-options, .login-button, .auth-links');
+            
+            formElements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 100 + (80 * index));
+            });
+
+            // Effet de loading au submit
+            if (form) {
+                form.addEventListener('submit', function() {
+                    submitBtn.classList.add('loading');
+                    buttonText.style.opacity = '0';
+                    spinner.style.display = 'block';
+                });
+            }
+
+            // Amélioration de l'UX des champs
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+            inputs.forEach(input => {
+                // Effet au focus
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+
+                // Validation basique
+                input.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        this.style.borderColor = 'var(--primary-light)';
+                    } else {
+                        this.style.borderColor = 'var(--gray-light)';
+                    }
+                });
+            });
+        });
+    </script>

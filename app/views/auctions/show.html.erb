@@ -1,0 +1,213 @@
+
+
+<%= render 'layouts/home_header' %>
+<style>
+  /* app/assets/stylesheets/auction_show.css */
+.auction-hero {
+  background: linear-gradient(135deg, #ff9a00 0%, #ffcc00 100%);
+}
+
+.timer-lg {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #dc3545;
+}
+
+.table-success {
+  background-color: #d1e7dd;
+}
+</style>
+
+<%= content_for :title, "#{@auction.titre} | Enchères MagJury" %>
+
+<section class="auction-hero mt-5">
+  <div class="container text-white text-center py-5">
+    <h1 class="display-5 fw-bold"><%= @auction.titre %></h1>
+    <p class="lead"><%= @auction.localisation %></p>
+  </div>
+</section>
+
+<div class="container my-5">
+  <div class="row g-4">
+    <!-- COLONNE GAUCHE : INFO + FORM -->
+    <div class="col-lg-8">
+      <!-- STATUT + TIMER -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <% if @auction.brouillon? %>
+            <div class="alert alert-secondary mb-0">
+              <i class="bi bi-lock"></i> Cette vente est en <strong>brouillon</strong> (non publique).
+            </div>
+          <% elsif @auction.terminee? %>
+            <div class="alert alert-danger mb-0 text-center">
+              <i class="bi bi-stop-circle"></i> VENTE TERMINÉE
+            </div>
+          <% elsif @auction.en_cours? %>
+            <div class="text-center">
+              <small>Se termine dans</small>
+              <div id="timer" class="timer-lg" data-seconds="<%= @auction.temps_restant %>" data-action="close"></div>
+            </div>
+          <% elsif @auction.bientot? %>
+            <div class="text-center">
+              <small>Ouverture dans</small>
+              <div id="timer" class="timer-lg" data-seconds="<%= @auction.temps_avant_ouverture %>" data-action="start"></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Description</h5>
+          <p><%= @auction.description %></p>
+          <hr>
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="fw-bold fs-5"><%= number_to_currency(@auction.prix_actuel || @auction.prix_depart, unit: devise) %></div>
+              <small class="text-muted">Prix actuel</small>
+            </div>
+            <div class="col-4">
+              <div class="fw-bold fs-5"><%= @auction.nombre_mises %></div>
+              <small class="text-muted">Mises</small>
+            </div>
+            <div class="col-4">
+              <div class="fw-bold fs-5"><%= @auction.localisation %></div>
+              <small class="text-muted">Localisation</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULAIRE D'ENCHÈRE -->
+      <% if user_signed_in? && current_user.approved? && @auction.en_cours? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Placer une enchère</h5>
+            <%= form_with url: auction_bids_path(@auction), method: :post, local: true, html: { class: "row g-3" } do |f| %>
+              <div class="col-md-8">
+                <%= f.label :montant, "Montant (#{devise})", class: "form-label" %>
+                <%= f.number_field :montant, name: "bid[montant]",
+                                   min: @auction.prix_actuel + 1000, step: 1000,
+                                   class: "form-control", required: true,
+                                   aria: { describedby: "montantHelp" } %>
+                <div id="montantHelp" class="form-text">Minimum : <%= number_to_currency(@auction.prix_actuel + 1000, unit: devise) %></div>
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <%= f.submit "Enchérir", class: "btn btn-warning w-100" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% elsif @auction.terminee? %>
+        <!-- Rien -->
+      <% else %>
+        <div class="alert alert-info">
+          <% if user_signed_in? %>
+            <% if current_user.pending? %>Compte en attente de validation.<% else %>La vente n’est pas encore ouverte.<% end %>
+          <% else %>
+            <%= link_to "Connectez-vous pour enchérir", signup_path(role: 'bidder'), class: "alert-link" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- CLASSEMENT -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Classement des enchérisseurs</h5>
+          <% if @bids.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Rang</th>
+                    <th>Enchérisseur</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @bids.each_with_index do |bid, i| %>
+                    <tr class="<%= 'table-success' if i.zero? && @auction.terminee? %>">
+                      <td>
+                        <%= i + 1 %>
+                        <% if i.zero? && @auction.terminee? %><span class="badge bg-success ms-2">Vainqueur</span><% end %>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <%= image_tag bid.user.profile.presence || "logo.jpg", class: "rounded-circle me-2", width: 32, height: 32, alt: "" %>
+                          <span><%= bid.user.prenom %> <%= bid.user.nom %></span>
+                        </div>
+                      </td>
+                      <td class="fw-bold"><%= number_to_currency(bid.montant, unit: devise) %></td>
+                      <td><%= l(bid.created_at, format: :short) %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted">Aucune mise pour l’instant.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE : IMAGE + ACTIONS ADMIN -->
+    <div class="col-lg-4">
+      <div class="sticky-lg-top" style="top: 1rem;">
+        <%= image_tag @auction.image.presence || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                      class: "img-fluid rounded mb-3", alt: @auction.titre %>
+
+        <% if current_user&.admin? %>
+          <div class="d-grid gap-2">
+            <% if @auction.brouillon? %>
+              <%= button_to "Publier la vente", publish_auction_path(@auction), method: :patch, class: "btn btn-primary" %>
+            <% end %>
+            <%= link_to "Modifier", edit_auction_path(@auction), class: "btn btn-outline-secondary btn-sm" %>
+            <%= button_to "Supprimer", @auction, method: :delete, class: "btn btn-outline-danger btn-sm",
+                          confirm: "Confirmer la suppression ?" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS TIMER + AUTO ACTIONS -->
+<script>
+  const auctionId = <%= @auction.id %>;
+  const el = document.getElementById("timer");
+  if (el) {
+    let sec = parseInt(el.dataset.seconds, 10);
+    const action = el.dataset.action; // "start" ou "close"
+    if (isNaN(sec) || sec <= 0) {
+      el.textContent = "Terminé";
+      if (action === "start") fetchAction(`/auctions/${auctionId}/start`);
+      if (action === "close") fetchAction(`/auctions/${auctionId}/close`);
+    } else {
+      const tick = () => {
+        sec--;
+        const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+        const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+        const s = String(sec % 60).padStart(2, "0");
+        el.textContent = `${h}:${m}:${s}`;
+        if (sec <= 0) {
+          clearInterval(interval);
+          el.textContent = "Terminé";
+          if (action === "start") fetchAction(`/auctions/${auctionId}/start`);
+          if (action === "close") fetchAction(`/auctions/${auctionId}/close`);
+        }
+      };
+      const interval = setInterval(tick, 1000);
+      tick();
+    }
+
+    function fetchAction(url) {
+      fetch(url, {
+        method: "PATCH",
+        headers: { "X-CSRF-Token": document.querySelector("[name='csrf-token']").content }
+      }).then(() => location.reload());
+    }
+  }
+</script>

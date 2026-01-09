@@ -1,0 +1,110 @@
+<%= content_for :title, "Profil #{@user.full_name} | Admin MagJury" %>
+
+<style>
+  .table { --bs-table-bg: transparent; --bs-table-striped-bg: rgba(0, 0, 0, 0.02); }
+  .table-hover tbody tr:hover { background-color: rgba(0, 123, 255, 0.05) !important; }
+  .card { border-radius: 12px; }
+  .card-header hr { border-top: 1px solid rgba(0, 0, 0, 0.08); }
+  .badge.bg-success { background-color: #28a745 !important; }
+  .badge.bg-danger { background-color: #dc3545 !important; }
+  .btn-group-sm .btn { padding: 0.25rem 0.5rem; font-size: 0.765rem; }
+</style>
+
+<div class="bg-white px-8 py-8 rounded-3">
+  <div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+      <!-- EN-TÊTE -->
+      <div class="card-header bg-primary text-white rounded-top-4">
+        <h3 class="mb-0"><i class="bi bi-person-circle me-2"></i> Profil administrateur</h3>
+      </div>
+
+      <!-- CORPS -->
+      <div class="card-body p-4">
+        <!-- IDENTITÉ -->
+        <h5 class="mb-3 text-primary">Identité</h5>
+        <dl class="row mb-0">
+          <dt class="col-sm-3 fw-bold">Nom complet :</dt>
+          <dd class="col-sm-9"><%= @user.full_name %></dd>
+
+          <dt class="col-sm-3 fw-bold">Email :</dt>
+          <dd class="col-sm-9"><%= @user.email %></dd>
+
+          <dt class="col-sm-3 fw-bold">Téléphone :</dt>
+          <dd class="col-sm-9"><%= @user.phone.presence || "—" %></dd>
+
+          <dt class="col-sm-3 fw-bold">Adresse :</dt>
+          <dd class="col-sm-9"><%= @user.address.presence || "—" %></dd>
+
+          <dt class="col-sm-3 fw-bold">Rôle :</dt>
+          <dd class="col-sm-9">
+            <span class="badge <%= @user.role == 'admin' ? 'bg-danger' : 'bg-info' %>"><%= @user.role.humanize %></span>
+          </dd>
+
+          <dt class="col-sm-3 fw-bold">Compte bloqué :</dt>
+          <dd class="col-sm-9">
+            <span class="badge <%= @user.blocked? ? 'bg-danger' : 'bg-success' %>"><%= @user.blocked? ? "Oui" : "Non" %></span>
+          </dd>
+
+          <dt class="col-sm-3 fw-bold">Contributeur :</dt>
+          <dd class="col-sm-9">
+            <span class="badge <%= @user.contrib_contributor? ? 'bg-warning' : 'bg-secondary' %>"><%= @user.contrib_contributor? ? "Oui" : "Non" %></span>
+          </dd>
+        </dl>
+
+        <hr class="my-4">
+
+        <!-- MÉTIER -->
+        <% if @user.profession.present? || @user.domaine.present? %>
+          <h5 class="mb-3 text-primary">Métier</h5>
+          <dl class="row mb-0">
+            <% if @user.profession.present? %>
+              <dt class="col-sm-3 fw-bold">Profession :</dt>
+              <dd class="col-sm-9"><%= @user.profession %></dd>
+            <% end %>
+            <% if @user.domaine.present? %>
+              <dt class="col-sm-3 fw-bold">Domaine :</dt>
+              <dd class="col-sm-9"><%= @user.domaine %></dd>
+            <% end %>
+          </dl>
+          <hr class="my-4">
+        <% end %>
+
+        <!-- BIO -->
+        <% if @user.bio.present? %>
+          <h5 class="mb-3 text-primary">Biographie</h5>
+          <p><%= simple_format(@user.bio) %></p>
+          <hr class="my-4">
+        <% end %>
+
+        <!-- RÉSEAUX SOCIAUX -->
+        <% if @user.social_links.any? %>
+          <h5 class="mb-3 text-primary">Réseaux sociaux</h5>
+          <div class="d-flex gap-3">
+            <% @user.social_links.each do |platform, url| %>
+              <%= link_to url, target: "_blank", class: "btn btn-outline-secondary btn-sm", title: platform.capitalize do %>
+                <i class="bi bi-<%= platform %>"></i>
+              <% end %>
+            <% end %>
+          </div>
+          <hr class="my-4">
+        <% end %>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="card-footer bg-light d-flex justify-content-between rounded-bottom-4">
+        <div>
+          <% if @user.blocked? %>
+            <%= button_to "Débloquer", unblock_admin_user_path(@user), method: :patch, class: "btn btn-outline-success btn-sm me-2" %>
+          <% else %>
+            <%= button_to "Bloquer", block_admin_user_path(@user), method: :patch, class: "btn btn-outline-danger btn-sm me-2" %>
+          <% end %>
+        </div>
+
+        <div>
+          <%= link_to "Modifier", edit_admin_user_path(@user), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Retour à la liste", admin_users_path, class: "btn btn-secondary btn-sm ms-2" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

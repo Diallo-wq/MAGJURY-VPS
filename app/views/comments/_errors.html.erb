@@ -1,0 +1,8 @@
+<!-- app/views/comments/_errors.html.erb -->
+<% if comment.errors.any? %>
+  <div class="alert alert-danger">
+    <% comment.errors.full_messages.each do |msg| %>
+      <div><%= msg %></div>
+    <% end %>
+  </div>
+<% end %>

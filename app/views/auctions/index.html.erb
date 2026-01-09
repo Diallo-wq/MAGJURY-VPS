@@ -1,0 +1,84 @@
+<style>
+  /* app/assets/stylesheets/admin.css */
+.admin-header { background: #1f2937; }
+.table-hover tbody tr:hover { background-color: #f8f9fa; }
+.btn-group-sm .btn { padding: .25rem .5rem; font-size: .875rem; }
+</style>
+
+<%= content_for :title, "Admin - Enchères" %>
+
+<section class="admin-header bg-dark text-white py-4">
+  <div class="container">
+    <h1 class="mb-0">Gestion des enchères</h1>
+  </div>
+</section>
+
+<div class="container my-4">
+  <!-- BARRE ACTIONS -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <%= link_to "➕ Nouvelle enchère", new_auction_path, class: "btn btn-primary" %>
+    <span class="badge bg-secondary"><%= @auctions.count %> enchères</span>
+  </div>
+
+  <!-- FILTRES -->
+  <%= form_with url: auctions_path, method: :get, local: false, html: { class: "row g-2 mb-4", data: { turbo: false } } do |f| %>
+    <div class="col-md-4"><%= f.text_field :q, placeholder: "Rechercher un titre...", value: params[:q], class: "form-control" %></div>
+    <div class="col-md-3"><%= f.select :statut, options_for_select(Auction.statuts.keys.map { |s| [s.humanize, s] }, params[:statut]), { include_blank: "Tous statuts" }, class: "form-select" %></div>
+    <div class="col-md-3"><%= f.select :loc, options_for_select(Auction.pluck(:localisation).uniq.sort, params[:loc]), { include_blank: "Toutes régions" }, class: "form-select" %></div>
+    <div class="col-md-2 d-grid"><%= f.submit "Filtrer", class: "btn btn-outline-secondary" %></div>
+  <% end %>
+
+  <!-- TABLEAU -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Image</th>
+          <th>Titre</th>
+          <th>Statut</th>
+          <th>Prix actuel</th>
+          <th>Mises</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @auctions.each do |auction| %>
+          <tr>
+            <td><%= image_tag auction.image.presence || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80", class: "rounded", width: 60, alt: "" %></td>
+            <td><%= link_to auction.titre, auction_path(auction), target: "_blank", class: "text-decoration-none" %></td>
+            <td><%= render "badge_statut", statut: auction.statut %></td>
+            <td><%= number_to_currency(auction.prix_actuel || auction.prix_depart, unit: devise) %></td>
+            <td><%= auction.bids.size %></td>
+            <td><%= l(auction.debut, format: :short) %></td>
+            <td><%= l(auction.fin,   format: :short) %></td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <%= link_to "✏️", edit_auction_path(auction), class: "btn btn-outline-primary" %>
+                <% case auction.statut %>
+                <% when "brouillon" %>
+                  <%= button_to "Publier", publish_auction_path(auction), method: :patch, class: "btn btn-outline-success" %>
+                <% when "bientot" %>
+                  <%= button_to "Ouvrir",   start_auction_path(auction),   method: :patch, class: "btn btn-outline-warning" %>
+                <% when "en_cours" %>
+                  <%= button_to "Clôturer", close_auction_path(auction),  method: :patch, class: "btn btn-outline-danger" %>
+                <% end %>
+                <%= button_to "🗑️", auction_path(auction), method: :delete,
+                              form: { data: { turbo_confirm: "Supprimer définitivement ?" } },
+                              class: "btn btn-outline-danger" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @auctions.empty? %>
+    <div class="text-center py-5">
+      <i class="bi bi-inbox display-1 text-muted"></i>
+      <p class="text-muted fs-5">Aucune enchère ne correspond à vos critères.</p>
+    </div>
+  <% end %>
+</div>

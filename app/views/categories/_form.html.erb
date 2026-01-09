@@ -1,0 +1,26 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <%= form_with(model: category, local: true) do |form| %>
+      <% if category.errors.any? %>
+        <div class="alert alert-danger">
+          <h6 class="fw-bold"><%= pluralize(category.errors.count, "erreur") %> à corriger :</h6>
+          <ul class="mb-0">
+            <% category.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= form.label :name, "Nom de la catégorie", class: "form-label fw-bold" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Ex: Technologie" %>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <%= link_to "Annuler", categories_path, class: "btn btn-secondary" %>
+        <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

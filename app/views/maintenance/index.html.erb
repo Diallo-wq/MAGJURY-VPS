@@ -1,0 +1,33 @@
+<%= render 'layouts/home_header' %>
+<style>
+
+.gear-spin {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+<%= content_for :title, "En construction | MagJury" %>
+
+<section class="construction-hero min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="container text-center text-dark">
+    <!-- Icône animée -->
+    <div class="mb-4">
+      <i class="bi bi-gear-fill display-1 text-dark-50 gear-spin"></i>
+    </div>
+
+    <!-- Titre -->
+    <h1 class="display-4 fw-bold mb-3">Nous améliorons l’expérience</h1>
+
+    <!-- Message -->
+    <p class="lead mb-4">
+      Cette section est actuellement en cours de construction.<br>
+      Revenez très bientôt pour découvrir nos nouveautés !
+    </p>
+
+    <!-- Bouton retour -->
+    <%= link_to "Retour à l’accueil", root_path, class: "btn btn-outline-dark btn-lg" %>
+  </div>
+</section>

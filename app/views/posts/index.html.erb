@@ -1,0 +1,82 @@
+<style>
+  .table-hover tbody tr:hover { background-color: #f8f9fa; }
+.admin-header { background: #1f2937; }
+</style>
+
+<!-- app/views/admin/posts/index.html.erb (ou votre vue existante) -->
+<%= content_for :title, "Admin - Articles" %>
+
+<section class="admin-header bg-dark text-white py-4">
+  <div class="container">
+    <h1 class="mb-0">Gestion des articles</h1>
+  </div>
+</section>
+
+<div class="container my-4">
+  <!-- BARRE & FILTRES -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <%= link_to "➕ Nouvel article", new_post_path, class: "btn btn-primary btn-sm", data: {turbo: false} %>
+    <span class="badge bg-secondary"><%= @posts.count %> articles</span>
+  </div>
+
+  <%= form_with url: posts_path, method: :get, local: false, html: { class: "row g-2 mb-4" } do |f| %>
+    <div class="col-md-4"><%= f.text_field :q, placeholder: "Titre, tag...", value: params[:q], class: "form-control form-control-sm" %></div>
+    <div class="col-md-3"><%= f.select :status, options_for_select(Post.statuses.keys.map { |s| [s.humanize, s] }, params[:status]), { include_blank: "Tous statuts" }, class: "form-select form-select-sm" %></div>
+    <div class="col-md-3"><%= f.select :category_id, options_from_collection_for_select(Category.order(:name), :id, :name, params[:category_id]), { include_blank: "Toutes catégories" }, class: "form-select form-select-sm" %></div>
+    <div class="col-md-2 d-grid"><%= f.submit "Filtrer", class: "btn btn-outline-secondary btn-sm" %></div>
+  <% end %>
+
+  <!-- TABLEAU PRO -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Image</th>
+          <th>Titre</th>
+          <th>Catégorie</th>
+          <th>Tags</th>
+          <th>Vues</th>
+          <th>Auteur</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @posts.each do |post| %>
+          <tr>
+            <td><%= post.id %></td>
+            <td>
+              <% if post.cover_image.attached? %>
+                <%= image_tag url_for(post.cover_image), width: 40, height: 40, crop: :thumb, class: "rounded-circle" %>
+              <% else %>
+                <div class="rounded-circle bg-secondary" style="width:40px;height:40px;"></div>
+              <% end %>
+            </td>
+            <td><%= link_to post.title, post_path(post), class: "text-decoration-none fw-bold",  data: {turbo: false} %></td>
+            <td><%= post.category&.name || "—" %></td>
+            <td><%= post.tags.map(&:name).join(", ") %></td>
+            <td><%= post.views %></td>
+            <td><%= post.user&.email || "—" %></td>
+            <td><%= render "posts/badge_status", status: post.status %></td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <%= link_to "👁", post_path(post), title: "Voir", class: "btn btn-outline-primary btn-sm" %>
+                <%= link_to "✏", edit_post_path(post), title: "Éditer", class: "btn btn-outline-secondary btn-sm", data: {turbo: false} %>
+                <%= button_to "🗑", post_path(post), method: :delete,
+                              form: { data: { turbo_confirm: "Supprimer cet article ?" } },
+                              class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @posts.empty? %>
+    <div class="text-center py-5">
+      <p class="text-muted fs-5">Aucun article ne correspond à vos critères.</p>
+    </div>
+  <% end %>
+</div>

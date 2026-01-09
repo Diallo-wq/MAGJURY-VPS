@@ -1,0 +1,522 @@
+
+<div class="page-wrapper">
+ <!-- Header amélioré pour MAGJURY -->
+	<%= render 'layouts/home_header' %>
+	<!-- Services Section -->
+	
+    <section class="banner-section">
+        <!-- Vidéo de fond -->
+        <video class="banner-video" autoplay muted loop playsinline>
+             <source src="<%= asset_path('hero_video.mp4') %>" type="video/mp4">
+            <!-- Fallback image si la vidéo ne charge pas -->
+            <%= image_tag 'bg-loi.jpg' %>
+        </video>
+        
+        <!-- Overlay sombre -->
+        <div class="banner-overlay"></div>
+        
+        <!-- Contenu -->
+        <div class="banner-content">
+            <span class="banner-subtitle">Démarrez avec MAGJURY</span>
+            <h1 class="banner-title">
+                Nous sommes ici pour la protection contre <br>
+                 toutes formes de <span>violences</span>
+            </h1>
+            <p class="banner-description">
+                Votre partenaire de confiance pour la défense de vos droits et 
+                la protection juridique dont vous avez besoin.
+            </p>
+            <div class="banner-buttons">
+                <a href="<%=offre_de_service_path%>" class="btn btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                        <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Nos services
+                </a>
+                <a href="<%=contact_path%>" class="btn btn-secondary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Nous contacter
+                </a>
+            </div>
+        </div>
+        
+        <!-- Indicateur de défilement -->
+        <a href="#next-section" class="banner-scroll">
+            <span>Découvrir</span>
+            <div class="scroll-arrow"></div>
+        </a>
+    </section>
+
+  
+
+  
+
+	<!-- Services Section -->
+		<section class="services-section" id="next-section">
+			<div class="icon-one wow zoomIn" data-wow-delay="250ms" data-wow-duration="1500ms"style="background-image: url('<%= asset_path("icon-1.png") %>')"></div>
+			<div class="icon-two wow fadeInRight" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url('<%= asset_path("icon-2.png") %>')"></div>
+			<div class="container">
+				<div class="row clearfix">
+							
+					<!-- Services Block -->
+					<div class="services-block col-lg-4 col-md-6 col-sm-12">
+						<div class="inner-box wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+							<div class="border-one"></div>
+							<div class="border-two"></div>
+							<div class="content">
+								<div class="icon-box">
+									<i class="fas fa-lightbulb"></i>
+								</div>
+								<h6>Conseils</h6>
+								<div class="text">Permettre aux citoyens de connaitre leur droit, savoir le réclamer et saisir les
+									juridictions en cas de problème.</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Services Block -->
+					<div class="services-block col-lg-4 col-md-6 col-sm-12">
+						<div class="inner-box wow fadeInUp" data-wow-delay="300ms" data-wow-duration="1500ms">
+							<div class="border-one"></div>
+							<div class="border-two"></div>
+							<div class="content">
+								<div class="icon-box">
+									<i class="fas fa-compass"></i>
+								</div>
+								<h6>Orientation</h6>
+								<div class="text">Donnez accès au droit à l’information et à la communication des citoyens selon la constitution Guinéenne</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Services Block -->
+					<div class="services-block col-lg-4 col-md-6 col-sm-12">
+						<div class="inner-box wow fadeInUp" data-wow-delay="600ms" data-wow-duration="1500ms">
+							<div class="border-one"></div>
+							<div class="border-two"></div>
+							<div class="content">
+								<div class="icon-box">
+									<i class="fas fa-headset"></i>
+								</div>
+								<h6>Assistance/Orientation</h6>
+								<div class="text">Promouvoir et  vulgariser les informations judiciaires en ligne (décisions de
+									justice, mandats, ordonnances, convocations).</div>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</section>
+	<!-- End Services Section -->
+	<!-- End Services Section -->
+		<!-- News Section -->
+		<section class="news-section">
+			<div class="container">
+			
+				<!-- Sec Title -->
+				<div class="section-title">
+					<div class="clearfix">
+						<div class="pull-left">
+							<div class="title">actualités</div>
+							<h3>Jetez un coupe d'oeil sur nos 
+								<br> dernières <span>actualités</span></h3>
+						</div>
+						<div class="pull-right">
+							<div class="text">MAGJURY rend la vie facile, de par la mise à disposition de son contenu riche et diversifié et son ergonomie accessible à tous</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row clearfix">
+
+					<% if @posts.any? %>	
+					<!-- News Block -->
+					<% @posts.each do |post| %>
+						<div class="news-block col-lg-4 col-md-6 col-sm-12">
+							<div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+								<div class="image">
+									<% if post.cover_image.attached? %>
+										<%= image_tag url_for(post.cover_image), class: "magazine-article-img card-img-top" %>
+									<% else %>
+									<img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+										class="magazine-article-img card-img-top" alt="Article">
+									<% end %>
+								</div>
+								<div class="lower-content">
+									<ul class="post-meta">
+										<li><span class="fa fa-calendar"></span><%= time_ago_in_words(post.created_at) %></li>
+										<li><span class="fa fa-user"></span><%=post.user.full_name%></li>
+									</ul>
+									<h5> <%= link_to post.title, post_path(post), class: "text-decoration-none text-dark" %></h5>
+									<%= link_to post.title, post_path(post), class: "text-decoration-none text-dark" %>
+									<%= link_to "Lire →", post_path(post) %>
+								</div>
+							</div>
+						</div>
+						<%end%>
+					<%else%>
+					<h3 class="mb-5">Aucun article pour le moment</h3>
+					<%end%>
+					
+				</div>
+				<div>
+					<a href="<%=magazine_path%>" class="theme-btn bg-primary btn-style-two mb-5">Allez à la page des actualités</a>
+				</div>
+			</div>
+		</section>
+		<!-- End News Section -->
+	<!-- About Section -->
+		<section class="mj-about-section">
+		<div class="mj-about-container">
+			<div class="mj-about-grid">
+
+			<!-- COLONNE GAUCHE : CONTENU -->
+			<div class="mj-about-content">
+				<div class="mj-about-header">
+				<span class="mj-about-tag">À propos de nous</span>
+				<h2 class="mj-about-title">
+					MAGJURY est un magazine juridique qui œuvre pour <span class="mj-about-highlight">la promotion</span> et la <span class="mj-about-highlight">vulgarisation</span> des actualités juridiques en Guinée et en Afrique.
+				</h2>
+				</div>
+
+				<div class="mj-about-text">
+				<p>Dans un monde ouvert à la démocratie, l’information et la communication sont des repères pour les citoyens afin de leur permettre de participer activement au développement sociopolitique, économique et juridique de leur communauté.</p>
+				<p>Le droit à l’information et à la communication est garanti par la constitution Guinéenne du 14 mars 2020, et les conventions internationales, privilégiant les citoyens de trouver la solution à leur situation juridique.</p>
+				</div>
+
+				<!-- ICÔNES CONSEIL / ORIENTATION / ASSISTANCE -->
+				<div class="mj-about-icons mt-4">
+				<div class="mj-about-icon-item">
+					<i class="fas fa-lightbulb"></i>
+					<span>Conseil</span>
+				</div>
+				<div class="mj-about-icon-item">
+					<i class="fas fa-compass"></i>
+					<span>Orientation</span>
+				</div>
+				<div class="mj-about-icon-item">
+					<i class="fas fa-headset"></i>
+					<span>Assistance</span>
+				</div>
+				</div>
+			</div>
+
+			<!-- COLONNE DROITE : IMAGE + STAT -->
+			<div class="mj-about-image">
+				<%= image_tag 'about-2.jpg', class: "mj-about-img", alt: "Équipe MagJury" %>
+				<div class="mj-about-overlay">
+				<div class="mj-about-stat">
+					<span class="mj-about-stat-number">5</span>
+					<span class="mj-about-stat-text">ans d’expérience</span>
+				</div>
+				</div>
+			</div>
+
+			</div>
+		</div>
+		</section>
+	<!-- End About Section -->
+	
+	<!-- Services Section Two -->
+	<section class="services-section-two" style="background-image: url('<%= asset_path("1.jpg") %>');">
+		<div class="container">
+			<!-- Sec Title -->
+			<div class="section-title light centered">
+				<div class="title">Services</div>
+				<h3>Prenez connaissances des services que nous <span>offront</span></h3>
+			</div>
+			<div class="row clearfix">
+				
+				<% @services.each do |service| %>
+				<!-- Services Block Two -->
+					<div class="services-block-two col-lg-4 col-md-6 col-sm-12">
+						<div class="inner-box">
+							<div class="icon-box">
+								<span class="icon flaticon-internet"></span>
+							</div>
+							<h3><%= service.title %></h3>
+							<div class="text"><%= raw(truncate(strip_tags(service.description), length: 150)) %></div>
+							<div class="overlay-box" style="background-image: url('<%= asset_path("service-2.jpg") %>')">
+								<div class="overlay-inner">
+									<div class="content">
+										<span class="icon flaticon-internet"></span>
+										<h4><%= service.title %></h4>
+										<a href="<%=offre_de_service_path%>" class="theme-btn bg-primary btn-style-one">En savoir plus</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<%end%>
+				
+			</div>
+		
+		</div>
+	</section>
+	<!-- End Services Section Two -->
+	
+	<!-- Counter Section -->
+	<section class="counter-section">
+		<div class="icon-one wow zoomIn" data-wow-delay="250ms" data-wow-duration="1500ms" style="background-image: url('<%= asset_path("icon-3.png") %>')"></div>
+		<div class="icon-two wow fadeInRight" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url('<%= asset_path("icon-4.png") %>')"></div>
+		<div class="container">
+			<!-- Title Box -->
+			<div class="title-box">
+				<div class="section-title">
+					<div class="row clearfix">
+						<div class="column col-lg-6 col-md-12 col-sm-12">
+							<div class="title">A savoir</div>
+							<h3>Nous sommes très fiers de notre<br> grande <span>réussite.</span></h3>
+						</div>
+						<div class="column col-lg-6 col-md-12 col-sm-12">
+							<div class="row clearfix">
+								
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									<p>C’est dans une vision de créer une « justice de proximité » que nous souhaitons faire comprendre l'adéquation des fondements de la « distance judiciaire », </p>
+								</div>
+								
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									<p>qui est variables d’un contexte à un autre, et dont ses dimensions physique, psychologique et financière ne sauraient rendre compte que lorsqu’elles sont observées dans des mesures concrètes.</p>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Fact Counter -->
+			<div class="fact-counter">
+				<div class="row clearfix">
+				
+					<!--Column-->
+					<div class="column counter-column col-lg-3 col-md-6 col-sm-12">
+						<div class="inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+							<div class="count-outer count-box">
+								<span class="count-text" data-speed="3000ms" data-stop="1825">0</span>+
+								<div class="counter-title">Articles publiés</div>
+							</div>
+						</div>
+					</div>
+			
+					<!--Column-->
+					<div class="column counter-column col-lg-3 col-md-6 col-sm-12">
+						<div class="inner wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+							<div class="count-outer count-box">
+								<span class="count-text" data-speed="2000" data-stop="532">0</span>+
+								<div class="counter-title">clients satisfaits</div>
+							</div>
+						</div>
+					</div>
+			
+					<!--Column-->
+					<div class="column counter-column col-lg-3 col-md-6 col-sm-12">
+						<div class="inner wow fadeInLeft" data-wow-delay="600ms" data-wow-duration="1500ms">
+							<div class="count-outer count-box">
+								<span class="count-text" data-speed="2000" data-stop="69">0</span>+
+								<div class="counter-title">Livre disponibles</div>
+							</div>
+						</div>
+					</div>
+			
+					<!--Column-->
+					<div class="column counter-column col-lg-3 col-md-6 col-sm-12">
+						<div class="inner wow fadeInLeft" data-wow-delay="900ms" data-wow-duration="1500ms">
+							<div class="count-outer count-box">
+								<span class="count-text" data-speed="1500" data-stop="32">0</span>+
+								<div class="counter-title">Produits disponibles</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+	</section>
+	
+	<!-- Team Section -->
+  <% if User.contributors.any? %>	
+    <section class="team-section">
+        <div class="container">
+            <!-- Titre de Section -->
+            <div class="section-title">
+                <span class="title">Contributions</span>
+                <h3>Nos experts <span>contributeurs</span> sur MAGJURY</h3>
+            </div>
+            
+            <!-- Indicateur de scroll pour mobile -->
+            <div class="scroll-indicator">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Glissez pour naviguer
+            </div>
+
+            <!-- Slider des Experts -->
+            <div class="team-slider">
+                <div class="team-slider-container" id="sliderContainer">
+                    <div class="team-slider-track" id="sliderTrack">
+                        <!-- Expert 1 -->
+						<% User.contributors.each do |user| %>
+                        <div class="team-card">
+                            <div class="team-specialty"><%= user.domaine %></div>
+                            <div class="team-image">
+                                <%= image_tag user.profile.attached? ? user.profile : "team-1.jpg", class: "img-fluid" %>
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <% user.social_links.each do |platform, url| %>
+											<%= link_to url, target: "_blank", class: "social-link", aria: { label: platform } do %>
+											<i class="bi bi-<%= platform %>"></i>
+											<% end %>
+										<% end %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-content">
+                                <h3 class="team-name"><a href="#"><%= user.full_name %></a></h3>
+                                <span class="team-role"><%= user.profession %></span>
+                                <p class="team-bio"><%= truncate(user.bio, length: 50) %></p>
+                            </div>
+                        </div>
+						<%end%>
+
+
+                        <!-- Vous pouvez ajouter autant d'experts que vous voulez -->
+                        <!-- Le slider s'adaptera automatiquement -->
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contrôles du Slider -->
+            <div class="slider-controls">
+                <button class="slider-arrow prev" aria-label="Précédent">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                <div class="slider-dots" id="sliderDots">
+                    <!-- Les points seront générés par JavaScript -->
+                </div>
+
+                <div class="slider-progress">
+                    <div class="slider-progress-bar" id="progressBar"></div>
+                </div>
+
+                <button class="slider-arrow next" aria-label="Suivant">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+  <%end%>
+   
+
+	<!-- End Team Section -->
+	
+	<%if @products.any?%>
+	<section class="boutique-section">
+		<div class="boutique-overlay"></div>
+		<div class="container">
+			<div class="boutique-header">
+				<!-- Titre de Section -->
+				<div class="section-title">
+					<span class="title">NOTRE BOUTIQUE</span>
+					<h2>MAGJURY met à votre disposition une gamme variée <span>d'œuvres</span> Juridiques et Judiciaires</h2>
+				</div>
+			</div>
+
+			<!-- Produits -->
+			<div class="produits-grid">
+				<!-- Produit 1 -->
+				
+				<% @products.each do |product| %>
+				<div class="produit-card">
+					<div class="produit-badge"><%= product.product_category.name %></div>
+					<div class="produit-image">
+						<%= image_tag product.image.attached? ? product.image : "livre1.jpg",
+                    	alt: product.title, class: "produit-img"  %>
+						<div class="produit-overlay">
+							<% whatsapp_nb = SiteSetting.current.whatsapp.presence || "0164427200" %>
+								<%= link_to "https://wa.me/#{whatsapp_nb.gsub(/\D/,'')}?text=#{u("Bonjour, je suis intéressé par le produit : #{product.title} - #{product_url(product)}")}",
+											target: "_blank",
+											class: "btn-ajouter-panier" do %>
+								<i class="bi bi-whatsapp"></i> commander
+							<% end %>
+							<%= link_to product_path(product), class: "btn-details" do %>
+								<i class="bi bi-eye"></i> Voir détails
+							<% end %>
+						</div>
+					</div>
+					<div class="produit-content">
+						<h3 class="produit-titre">
+							<%= link_to product.title, product_path(product) %>
+						</h3>
+						<span class="produit-categorie"><%= raw(truncate(strip_tags(product.description), length: 60)) %></span>
+						
+						<div class="produit-prix">
+							<span class="prix-actuel"><%= number_to_currency(product.current_price, unit: devise) %></span>
+							<% if product.reduced_price.present? && product.reduced_price > 0 %>
+								<span class="prix-original"><%= number_to_currency(product.price, unit: devise) %></span>
+							<% end %>
+						</div>
+					
+					</div>
+				</div>
+				<%end%>
+			</div>
+
+			<!-- Bouton Voir Plus -->
+			<div class="boutique-footer">
+				<a href="<%=boutique_path%>" class="btn-boutique">
+					<span>Découvrir tous nos produits</span>
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</section>
+
+<%end%>
+
+
+<%= render 'layouts/home_footer' %>
+<script>
+// Animation au scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const produitCards = document.querySelectorAll('.produit-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    produitCards.forEach(card => {
+        observer.observe(card);
+    });
+});
+</script>
+	
+
+	
+
+
+	
+</div>
+<!--End pagewrapper-->
+

@@ -1,0 +1,21 @@
+<!-- app/views/bids/create.turbo_stream.erb -->
+<%= turbo_stream.replace "prix-actuel" do %>
+  <div id="prix-actuel">
+    <strong>Prix actuel :</strong> <%= number_to_currency(@auction.prix_actuel, unit: devise) %>
+  </div>
+<% end %>
+
+<%= turbo_stream.replace "nombre-mises" do %>
+  <div id="nombre-mises">
+    <strong>Nombre de mises :</strong> <%= @auction.nombre_mises %>
+  </div>
+<% end %>
+
+<%= turbo_stream.prepend "liste-mises" do %>
+  <li id="bid_<%= @mise.id %>">
+    <strong>#<%= @auction.bids.count %></strong> -
+    <%= current_user.email %> -
+    <%= number_to_currency(@mise.montant, unit: devise) %> -
+    <%= l(@mise.created_at, format: :short) %>
+  </li>
+<% end %>

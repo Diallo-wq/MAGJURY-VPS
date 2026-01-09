@@ -1,0 +1,3 @@
+<!-- app/views/admin/auctions/_badge_statut.html.erb -->
+<% colors = { brouillon: "secondary", bientot: "warning", en_cours: "danger", terminee: "dark" } %>
+<span class="badge bg-<%= colors[statut.to_sym] %>"><%= statut.humanize %></span>

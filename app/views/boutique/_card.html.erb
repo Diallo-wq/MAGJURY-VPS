@@ -1,0 +1,48 @@
+<!-- app/views/boutique/_card.html.erb -->
+<div class="col-md-6 col-xl-4 mb-3">
+  <div class="produit-card">
+    <!-- BADGE -->
+    <% if product.discount_percent.positive? %>
+      <div class="produit-badge promo">-<%= product.discount_percent %>%</div>
+      <div class="produit-badge popular">Populaire</div>
+    <% else%>
+      <div class="produit-badge nouveau"><%= product.product_category.name %></div>
+    <% end %>
+
+    <!-- IMAGE -->
+    <div class="produit-image">
+      <%= image_tag product.image.attached? ? product.image : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    alt: product.title %>
+      <div class="produit-overlay">
+        <% whatsapp_nb = SiteSetting.current.whatsapp.presence || "0164427200" %>
+								<%= link_to "https://wa.me/#{whatsapp_nb.gsub(/\D/,'')}?text=#{u("Bonjour, je suis intéressé par le produit : #{product.title} - #{product_url(product)}")}",
+											target: "_blank",
+											class: "btn-ajouter-panier" do %>
+								<i class="bi bi-whatsapp"></i> commander
+							<% end %>
+        <%= link_to product_path(product), class: "btn-details" do %>
+          <i class="bi bi-eye"></i> Voir détails
+        <% end %>
+      </div>
+    </div>
+
+    <!-- CONTENU -->
+    <div class="produit-content">
+      <h3 class="produit-titre">
+        <%= link_to product.title, product_path(product) %>
+      </h3>
+      <%= raw(truncate(strip_tags(product.description), length: 60)) %>
+
+      <!-- PRIX -->
+      <div class="produit-prix">
+        <span class="prix-actuel"><%= number_to_currency(product.current_price, unit: devise) %></span>
+        <% if product.reduced_price.present? && product.reduced_price > 0 %>
+          <span class="prix-original"><%= number_to_currency(product.price, unit: devise) %></span>
+        <% end %>
+      </div>
+
+      <!-- STATUT / STOCK -->
+      <div class="produit-stock <%= product.limited? ? 'stock-faible' : '' %>"><%= product.stock_display %></div>
+    </div>
+  </div>
+</div> 

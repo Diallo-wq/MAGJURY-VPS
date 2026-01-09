@@ -1,0 +1,79 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h4 mb-0"><i class="bi bi-folder2 me-2"></i> Catégories</h1>
+</div>
+
+<!-- Ajout rapide -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <%= form_with model: @category || Category.new, url: categories_path, method: :post do |f| %>
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <%= f.label :name, 'Nouvelle catégorie', class: 'form-label' %>
+          <%= f.text_field :name, class: 'form-control', placeholder: 'Nom…', required: true %>
+        </div>
+        <div class="col-md-2">
+          <%= button_tag type: 'submit', class: 'btn btn-primary w-100' do %>
+            <i class="bi bi-plus-circle me-1"></i> Créer
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Liste -->
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th><i class="bi bi-folder2 me-1"></i> Nom</th>
+        <th class="text-center"><i class="bi bi-file-earmark-text me-1"></i> Articles</th>
+        <th class="text-end"><i class="bi bi-gear me-1"></i> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @categories.each do |category| %>
+        <tr>
+          <td><%= category.name %></td>
+          <td class="text-center">
+            <span class="badge bg-secondary"><%= category.posts_count %></span>
+          </td>
+          <td class="text-end">
+            <%= link_to edit_category_path(category), class: 'btn btn-sm btn-outline-primary me-1', title: 'Modifier' do %>
+              <i class="bi bi-pencil"></i>
+            <% end %>
+
+            <!-- Bouton déclencheur modal -->
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delCat<%= category.id %>" title="Supprimer">
+              <i class="bi bi-trash"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="delCat<%= category.id %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="mb-0">
+                      La catégorie <strong><%= category.name %></strong> sera supprimée <strong>définitivement</strong> ainsi que tous les articles qui y sont associés.
+                    </p>
+                    <p class="text-danger mb-0 mt-2">Cette action est irréversible.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <%= button_to 'Supprimer', category_path(category), method: :delete, class: 'btn btn-danger' %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

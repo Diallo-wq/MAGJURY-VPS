@@ -1,0 +1,826 @@
+
+    <%= render 'layouts/home_header' %>
+    <style>
+        :root {
+            --magjury-gold: #c9a96e;
+            --magjury-gold-light: #e6d6b8;
+            --magjury-gold-dark: #a8874c;
+            --magjury-dark: #0a0a12;
+            --magjury-dark-light: #1a1a24;
+            --magjury-light: #f8f9fa;
+            --magjury-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        body {
+            background-color: var(--magjury-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+        }
+        
+
+          /* Header */
+        .contact-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Header */
+        .services-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .services-nav {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 2px solid var(--magjury-gold);
+            color: var(--magjury-gold);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--magjury-gold);
+            color: white;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            padding: 80px 0;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 100%;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-card.featured {
+            border: 3px solid var(--magjury-gold);
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--magjury-gold);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .service-badge.popular {
+            background: var(--success);
+        }
+
+        .service-badge.new {
+            background: var(--info);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--magjury-gold) 0%, var(--magjury-gold-dark) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .service-content {
+            padding: 0 30px 30px;
+            text-align: center;
+            max-height: 299px;
+            overflow: auto;
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--magjury-dark);
+        }
+
+        .service-description {
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .service-features {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .feature-item i {
+            color: var(--success);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .service-pricing {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--magjury-dark);
+            line-height: 1;
+        }
+
+        .price-period {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .price-note {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .service-cta {
+            display: grid;
+            gap: 10px;
+        }
+
+        /* Process Section */
+        .process-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--magjury-gold);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--magjury-dark);
+        }
+
+        .step-description {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* Témoignages */
+        .testimonials-section {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonials-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--magjury-gold);
+        }
+
+        .author-info h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .author-info span {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .faq-item {
+            border: none;
+            border-bottom: 1px solid var(--magjury-gray);
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            background: none;
+            border: none;
+            padding: 20px 0;
+            font-weight: 600;
+            color: var(--magjury-dark);
+            text-align: left;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--magjury-gold);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question[aria-expanded="true"] i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 0 20px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--magjury-gold) 0%, var(--magjury-gold-dark) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .services-footer {
+            background: var(--magjury-dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .services-header {
+                padding: 80px 0 40px;
+            }
+            
+            .nav-categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .service-content {
+                padding: 0 20px 20px;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .service-card {
+                margin-bottom: 20px;
+            }
+            
+            .price-amount {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+
+     <header class="contact-header mt-5">
+        <div class="container">
+            <div class="header-content text-center">
+                <h1 class="display-4 fw-bold mb-3">Services Professionnels MAGJURY</h1>
+                <p class="lead mb-4">Des solutions juridiques sur mesure pour les professionnels du droit</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <p class="mb-4">Notre équipe d'experts vous accompagne dans tous vos projets juridiques avec des services adaptés à vos besoins spécifiques.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Services Grid -->
+    <!-- app/views/services/index.html.erb -->
+    <section class="services-grid" id="services">
+    <div class="container">
+        <div class="row">
+        <% @services.each do |service| %>
+            <div class="col-lg-4 col-md-6 mb-3">
+            <div class="service-card featured">
+                <% if service.category == "populaire" %>
+                    <div class="service-badge popular">Populaire</div>
+                <% elsif service.category == "nouveau" %>
+                    <div class="service-badge new">Nouveau</div>
+                <%elsif service.category == "expert" %>
+                    <div class="service-badge">Expert</div>
+                <% end %>
+
+                <div class="service-icon">
+                <i class="<%= service.icon.presence || "bi-briefcase" %>"></i>
+                </div>
+
+                <div class="service-content">
+                <h3 class="service-title"><%= service.title %></h3>
+                <p class="service-description"><%= raw(service.description) %></p>
+
+                <% if service.price.present?%>
+                    <div class="service-pricing">
+                        <div class="price-amount"><%= number_to_currency(service.price, unit: devise) %></div>
+                        <div class="price-period"><%= service.price_suffix %></div>
+                    </div>
+                <%end%>
+
+                <div class="service-cta">
+                    <%= link_to contact_path, class: "btn btn-primary" do %>
+                    <i class="fas fa-arrow-right me-2"></i>
+                    En savoir plus
+                    <% end %>
+                </div>
+                </div>
+            </div>
+            </div>
+        <% end %>
+        </div>
+    </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Comment ça marche ?</h2>
+                <p class="lead">Un processus simple et transparent pour bénéficier de nos services</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">Consultation Initiale</h4>
+                        <p class="step-description">Nous analysons vos besoins lors d'un premier entretien gratuit pour comprendre votre situation.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">Proposition Sur Mesure</h4>
+                        <p class="step-description">Nous élaborons une solution personnalisée avec devis détaillé et planning.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">Exécution du Service</h4>
+                        <p class="step-description">Notre équipe d'experts intervient selon les modalités convenues avec suivi régulier.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Livraison & Suivi</h4>
+                        <p class="step-description">Remise des livrables et mise en place d'un suivi post-prestation si nécessaire.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Ils nous font confiance</h2>
+                <p class="lead">Découvrez les retours de nos clients satisfaits</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Le service de consulting de MAGJURY a transformé notre approche juridique. Leurs conseils stratégiques nous ont permis d'anticiper des risques majeurs."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://ui-avatars.com/api/?name=Pierre+Martin&background=c9a96e&color=fff&size=50" 
+                                 alt="Pierre Martin" class="author-avatar">
+                            <div class="author-info">
+                                <h5>Pierre Martin</h5>
+                                <span>Directeur Juridique - Groupe Axium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "La formation sur les nouvelles réformes du droit des contrats était exceptionnelle. L'expertise des formateurs et la qualité des supports sont remarquables."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://ui-avatars.com/api/?name=Sophie+Dubois&background=c9a96e&color=fff&size=50" 
+                                 alt="Sophie Dubois" class="author-avatar">
+                            <div class="author-info">
+                                <h5>Sophie Dubois</h5>
+                                <span>Avocate - Cabinet Dubois & Associés</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "L'audit de conformité réalisé par MAGJURY nous a permis d'identifier des failles dans nos processus. Leur rapport détaillé et leurs recommandations étaient parfaits."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://ui-avatars.com/api/?name=Thomas+Moreau&background=c9a96e&color=fff&size=50" 
+                                 alt="Thomas Moreau" class="author-avatar">
+                            <div class="author-info">
+                                <h5>Thomas Moreau</h5>
+                                <span>DRH - Société Innovatech</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-3">Questions Fréquentes</h2>
+                        <p class="lead">Trouvez rapidement des réponses à vos interrogations</p>
+                    </div>
+                    
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Comment choisir le service adapté à mes besoins ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq1" class="collapse faq-answer">
+                                Nous proposons une consultation initiale gratuite pour analyser votre situation et vous orienter vers le service le plus adapté. Notre équipe évaluera vos besoins spécifiques et vous recommandera la solution optimale.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Quels sont vos délais d'intervention ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq2" class="collapse faq-answer">
+                                Les délais varient selon le service choisi. Pour les consultations urgentes : sous 48h. Rédaction d'actes : 3 à 5 jours ouvrés. Formations : planning à convenir. Audit : 2 à 3 semaines selon l'ampleur.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Proposez-vous des forfaits pour les cabinets d'avocats ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq3" class="collapse faq-answer">
+                                Oui, nous proposons des forfaits spécifiques pour les cabinets d'avocats incluant consulting, recherche juridique et formation à tarifs préférentiels. Contactez-nous pour une proposition sur mesure.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Quelle est votre politique de confidentialité ?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div id="faq4" class="collapse faq-answer">
+                                Toutes nos interventions sont couvertes par le secret professionnel. Nous signons des clauses de confidentialité avec chaque client et nos systèmes sont conformes au RGPD. Vos données sont parfaitement sécurisées.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Prêt à optimiser votre pratique juridique ?</h2>
+            <p class="cta-description">Rejoignez les centaines de professionnels qui nous font déjà confiance</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="<%=contact_path%>" class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
+                    <i class="fas fa-phone me-2"></i>
+                    Nous contacter
+                </a>
+                <a href="#services" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-list me-2"></i>
+                    Voir tous les services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+<%= render 'layouts/home_footer' %>
+
+    <!-- Modal Contact -->
+    <div class="modal fade" id="contactModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Demande de service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nom complet *</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Entreprise</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Service intéressé *</label>
+                            <select class="form-select" required>
+                                <option value="">Choisir un service</option>
+                                <option>Consulting Juridique Personnalisé</option>
+                                <option>Rédaction d'Actes Juridiques</option>
+                                <option>Formations Juridiques</option>
+                                <option>Audit de Conformité</option>
+                                <option>Recherche Juridique Approfondie</option>
+                                <option>Support Juridique Continu</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description de votre besoin *</label>
+                            <textarea class="form-control" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Délai souhaité</label>
+                            <select class="form-select">
+                                <option>Urgent (sous 48h)</option>
+                                <option>Cette semaine</option>
+                                <option>Sous 15 jours</option>
+                                <option>Sous 1 mois</option>
+                                <option>Planning flexible</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" required>
+                            <label class="form-check-label">J'accepte la politique de confidentialité</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-warning">Envoyer la demande</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animation au scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            serviceCards.forEach(card => {
+                observer.observe(card);
+            });
+
+            // Filtrage des services
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Gestion FAQ
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const target = this.getAttribute('data-bs-target');
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    
+                    // Fermer toutes les autres FAQ
+                    faqQuestions.forEach(q => {
+                        if (q !== this) {
+                            q.setAttribute('aria-expanded', 'false');
+                            const otherTarget = q.getAttribute('data-bs-target');
+                            const otherCollapse = bootstrap.Collapse.getInstance(otherTarget);
+                            if (otherCollapse) {
+                                otherCollapse.hide();
+                            }
+                        }
+                    });
+                });
+            });
+        });
+
+        // Simulation d'envoi de formulaire
+        document.querySelector('#contactModal .btn-warning').addEventListener('click', function() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+            alert('Votre demande a été envoyée ! Nous vous recontacterons dans les plus brefs délais.');
+            modal.hide();
+        });
+    </script>

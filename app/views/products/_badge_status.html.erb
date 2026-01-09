@@ -1,0 +1,3 @@
+<!-- app/views/admin/products/_badge_status.html.erb -->
+<% colors = { in_stock: "success", limited: "warning", out_of_stock: "secondary" } %>
+<span class="badge bg-<%= colors[status.to_sym] %>"><%= Product.human_attribute_name("status.#{status}") %></span>

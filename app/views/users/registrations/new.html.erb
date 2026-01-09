@@ -1,0 +1,625 @@
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3c55ff;
+            --primary-dark: #243246ff;
+            --primary-light: #4a6b78ff;
+            --accent: #6b7280;
+            --light: #f8f9fa;
+            --dark: #1f2937;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --gray-dark: #374151;
+            --border-radius: 12px;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: card-appear 0.6s ease-out;
+            border: 1px solid var(--gray-light);
+        }
+
+        @keyframes card-appear {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -40px;
+            right: -40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo i {
+            font-size: 28px;
+            margin-right: 12px;
+            opacity: 0.95;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .card-header p {
+            opacity: 0.9;
+            font-size: 15px;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+        }
+
+        .card-body {
+            padding: 40px 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            transition: var(--transition);
+            font-size: 15px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 1.5px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            background: white;
+            color: var(--dark);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+        }
+
+        input[type="email"]:focus + i,
+        input[type="password"]:focus + i {
+            color: var(--primary);
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 6px;
+            display: block;
+            font-style: italic;
+        }
+
+        .form-actions {
+            margin-top: 28px;
+        }
+
+        .signup-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .signup-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 85, 48, 0.2);
+        }
+
+        .signup-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-button.loading {
+            pointer-events: none;
+        }
+
+        .button-text {
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .auth-links p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 14px;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        .auth-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        .alert {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .alert-notice {
+            background: #f0f9ff;
+            color: #0369a1;
+            border-color: #bae6fd;
+        }
+
+        .alert-alert {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .error-notification {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .error-notification h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-notification h3 i {
+            font-size: 16px;
+        }
+
+        .error-notification ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .error-notification li {
+            padding: 4px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .error-notification li:before {
+            content: "•";
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* Style pour les liens partagés Devise */
+        .shared-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .shared-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 14px;
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .shared-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: var(--gray-light);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .strength-weak {
+            background: #dc2626;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background: #f59e0b;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background: #10b981;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                max-width: 100%;
+                border-radius: 10px;
+            }
+            
+            .card-body {
+                padding: 32px 24px;
+            }
+            
+            .card-header {
+                padding: 28px 24px;
+            }
+        }
+
+        /* Amélioration de l'accessibilité */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+
+    <div class="signup-card">
+        <div class="card-header">
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <h1>Magjury</h1>
+            </div>
+            <p>Créez votre compte professionnel</p>
+        </div>
+        
+        <div class="card-body">
+            <!-- Messages d'alerte -->
+            <% if notice %>
+                <div class="alert alert-notice">
+                    <i class="fas fa-info-circle"></i> <%= notice %>
+                </div>
+            <% end %>
+            
+            <% if alert %>
+                <div class="alert alert-alert">
+                    <i class="fas fa-exclamation-triangle"></i> <%= alert %>
+                </div>
+            <% end %>
+
+            <!-- Formulaire Devise -->
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "devise-form" }) do |f| %>
+                <%= f.error_notification %>
+                
+                <!-- Affichage personnalisé des erreurs -->
+                <% if f.object.errors.any? %>
+                    <div class="error-notification">
+                        <h3>
+                            <i class="fas fa-exclamation-circle"></i>
+                            Veuillez corriger les erreurs suivantes :
+                        </h3>
+                        <ul>
+                            <% f.object.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                            <% end %>
+                        </ul>
+                    </div>
+                <% end %>
+
+                <div class="form-inputs">
+                    <div class="form-group">
+                        <label for="user_email">Adresse email</label>
+                        <div class="input-with-icon">
+                            <%= f.input :email,
+                                        required: true,
+                                        autofocus: true,
+                                        label: false,
+                                        input_html: { 
+                                            autocomplete: "email",
+                                            class: "form-input",
+                                            placeholder: "votre@email.com"
+                                        } %>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_password">Mot de passe</label>
+                        <div class="input-with-icon">
+                            <%= f.input :password,
+                                        required: true,
+                                        label: false,
+                                        input_html: { 
+                                            autocomplete: "new-password",
+                                            class: "form-input password-field",
+                                            placeholder: "Créez un mot de passe sécurisé"
+                                        } %>
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <% if @minimum_password_length %>
+                            <span class="password-hint">
+                                <%= @minimum_password_length %> caractères minimum
+                            </span>
+                        <% end %>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="password-strength-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_password_confirmation">Confirmation du mot de passe</label>
+                        <div class="input-with-icon">
+                            <%= f.input :password_confirmation,
+                                        required: true,
+                                        label: false,
+                                        input_html: { 
+                                            autocomplete: "new-password",
+                                            class: "form-input",
+                                            placeholder: "Confirmez votre mot de passe"
+                                        } %>
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div id="password-match-message" class="password-hint"></div>
+                    </div>
+                </div>
+
+                <%= hidden_field_tag :role, params[:role] if %w[bidder].include?(params[:role]) %>
+
+                <div class="form-actions">
+                    <button type="submit" class="signup-button" id="submit-btn">
+                        <span class="button-text">Créer mon compte</span>
+                        <div class="loading-spinner"></div>
+                    </button>
+                </div>
+            <% end %>
+
+            <div class="auth-links">
+                <p>Vous avez déjà un compte ?</p>
+                <%= link_to "Se connecter", login_path %>
+            </div>
+
+            <div class="shared-links">
+                <!-- Liens supplémentaires Devise si nécessaire -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submit-btn');
+            const buttonText = submitBtn.querySelector('.button-text');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            const form = document.querySelector('.devise-form');
+            const passwordField = document.querySelector('.password-field');
+            const passwordConfirmField = document.querySelector('input[placeholder="Confirmez votre mot de passe"]');
+            const passwordStrengthBar = document.getElementById('password-strength-bar');
+            const passwordMatchMessage = document.getElementById('password-match-message');
+            
+            // Animation d'entrée pour les éléments du formulaire
+            const formElements = document.querySelectorAll('.form-group, .form-actions, .auth-links');
+            
+            formElements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 100 + (80 * index));
+            });
+
+            // Effet de loading au submit
+            if (form) {
+                form.addEventListener('submit', function() {
+                    submitBtn.classList.add('loading');
+                    buttonText.style.opacity = '0';
+                    spinner.style.display = 'block';
+                });
+            }
+
+            // Indicateur de force du mot de passe
+            if (passwordField) {
+                passwordField.addEventListener('input', function() {
+                    const password = this.value;
+                    let strength = 0;
+                    
+                    // Longueur
+                    if (password.length >= 8) strength += 1;
+                    if (password.length >= 12) strength += 1;
+                    
+                    // Complexité
+                    if (/[A-Z]/.test(password)) strength += 1;
+                    if (/[0-9]/.test(password)) strength += 1;
+                    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                    
+                    // Mise à jour de la barre de force
+                    passwordStrengthBar.className = 'password-strength-bar';
+                    if (password.length === 0) {
+                        passwordStrengthBar.style.width = '0%';
+                    } else if (strength <= 2) {
+                        passwordStrengthBar.classList.add('strength-weak');
+                    } else if (strength <= 4) {
+                        passwordStrengthBar.classList.add('strength-medium');
+                    } else {
+                        passwordStrengthBar.classList.add('strength-strong');
+                    }
+                    
+                    // Vérification de la correspondance des mots de passe
+                    checkPasswordMatch();
+                });
+            }
+
+            // Vérification de la correspondance des mots de passe
+            function checkPasswordMatch() {
+                const password = passwordField ? passwordField.value : '';
+                const confirmPassword = passwordConfirmField ? passwordConfirmField.value : '';
+                
+                if (confirmPassword.length === 0) {
+                    passwordMatchMessage.textContent = '';
+                    passwordConfirmField.style.borderColor = '';
+                } else if (password === confirmPassword) {
+                    passwordMatchMessage.textContent = '✓ Les mots de passe correspondent';
+                    passwordMatchMessage.style.color = '#10b981';
+                    passwordConfirmField.style.borderColor = '#10b981';
+                } else {
+                    passwordMatchMessage.textContent = '✗ Les mots de passe ne correspondent pas';
+                    passwordMatchMessage.style.color = '#dc2626';
+                    passwordConfirmField.style.borderColor = '#dc2626';
+                }
+            }
+
+            if (passwordConfirmField) {
+                passwordConfirmField.addEventListener('input', checkPasswordMatch);
+            }
+
+            // Amélioration de l'UX des champs
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+            inputs.forEach(input => {
+                // Effet au focus
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+
+                // Validation basique
+                input.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        this.style.borderColor = 'var(--primary-light)';
+                    } else {
+                        this.style.borderColor = 'var(--gray-light)';
+                    }
+                });
+            });
+        });
+    </script>

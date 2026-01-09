@@ -1,0 +1,111 @@
+<%= content_for :title, "Modifier mon profil | MagJury" %>
+
+<style>
+  .edit-profile-card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  }
+  .edit-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  .section-title { color: #667eea; font-weight: 600; }
+  .social-input-group { border-radius: 8px; overflow: hidden; }
+  .btn-save { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; }
+  .btn-save:hover { filter: brightness(1.1); }
+  .locked-info { background: #f8f9fa; border-left: 4px solid #ffc107; }
+</style>
+
+<div class="container my-5">
+  <div class="card edit-profile-card shadow-lg">
+    <!-- EN-TÊTE -->
+    <div class="card-header edit-header text-white text-center py-4">
+      <h3 class="mb-0"><i class="bi bi-pencil-square me-2"></i> Modifier mon profil</h3>
+    </div>
+
+    <!-- CORPS DU FORMULAIRE -->
+    <div class="card-body p-5">
+      <%= form_for(resource, as: resource_name, url: profil_path, html: { method: :put }) do |f| %>
+
+        <!-- 1. IDENTITÉ -->
+        <h5 class="section-title mb-3"><i class="bi bi-person-badge me-2"></i> Identité</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :nom, class: "form-label fw-bold" %>
+            <%= f.text_field :nom, class: "form-control", placeholder: "Votre nom" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :prenom, class: "form-label fw-bold" %>
+            <%= f.text_field :prenom, class: "form-control", placeholder: "Votre prénom" %>
+          </div>
+          <div class="col-md-12">
+            <%= f.label :email, class: "form-label fw-bold" %>
+            <%= f.email_field :email, class: "form-control", placeholder: "votre@email.com" %>
+          </div>
+        </div>
+
+        <!-- 2. MÉTIER & BIO -->
+        <h5 class="section-title mb-3"><i class="bi bi-briefcase me-2"></i> Métier & bio</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :profession, "Profession", class: "form-label fw-bold" %>
+            <%= f.text_field :profession, class: "form-control", placeholder: "Avocat, Juriste, Consultant…" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :domaine, "Domaine d’expertise", class: "form-label fw-bold" %>
+            <%= f.text_field :domaine, class: "form-control", placeholder: "Droit civil, social, affaires…" %>
+          </div>
+          <div class="col-12">
+            <%= f.label :bio, "Courte biographie", class: "form-label fw-bold" %>
+            <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Présentez-vous en quelques lignes…" %>
+          </div>
+        </div>
+
+        <!-- 3. RÉSEAUX SOCIAUX -->
+        <h5 class="section-title mb-3"><i class="bi bi-share me-2"></i> Réseaux sociaux</h5>
+        <div class="row g-3 mb-4">
+          <% %w[linkedin twitter facebook instagram tiktok].each do |network| %>
+            <div class="col-md-6">
+              <%= f.label network.to_sym, network.capitalize, class: "form-label fw-bold" %>
+              <div class="input-group social-input-group">
+                <span class="input-group-text"><i class="bi bi-<%= network %>"></i></span>
+                <%= f.url_field network.to_sym, class: "form-control", placeholder: "https://#{network}.com/votreprofil" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 4. MOT DE PASSE -->
+        <h5 class="section-title mb-3"><i class="bi bi-lock me-2"></i> Mot de passe</h5>
+        <div class="mb-3">
+          <%= f.label :password, "Nouveau mot de passe (laisser vide si inchangé)", class: "form-label fw-bold" %>
+          <%= f.password_field :password, class: "form-control", autocomplete: "new-password" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :password_confirmation, "Confirmation", class: "form-label fw-bold" %>
+          <%= f.password_field :password_confirmation, class: "form-control" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :current_password, "Mot de passe actuel (obligatoire pour toute modification)", class: "form-label fw-bold" %>
+          <%= f.password_field :current_password, class: "form-control", autocomplete: "current-password" %>
+        </div>
+
+        <!-- 5. SECTIONS VERROUILLÉES -->
+        <div class="locked-info p-3 rounded mb-4">
+          <h6 class="mb-0"><i class="bi bi-lock-fill me-2"></i> Sections verrouillées</h6>
+          <p class="mb-0 mt-2 text-muted">
+            Le rôle, le statut « contributeur » ou le blocage ne peuvent être modifiés ici.<br>
+            <%= link_to "Contactez l’administrateur", "#", class: "text-warning fw-bold" %> pour tout changement.
+          </p>
+        </div>
+
+        <!-- 6. ACTIONS -->
+        <div class="d-flex justify-content-between align-items-center">
+          <%= link_to "Annuler", profil_path, class: "btn btn-outline-secondary px-4" %>
+          <%= f.submit "Sauvegarder", class: "btn btn-save px-5" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

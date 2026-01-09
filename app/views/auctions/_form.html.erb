@@ -1,0 +1,188 @@
+<style>
+.auction-form {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auction-form .form-label {
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.auction-form .form-control,
+.auction-form .form-select {
+  border-radius: 0.5rem;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auction-form .form-control:focus,
+.auction-form .form-select:focus {
+  border-color: #ff9a00;
+  box-shadow: 0 0 0 0.2rem rgba(255, 154, 0, 0.25);
+}
+
+.img-preview {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #dee2e6;
+  padding: 0.25rem;
+}
+</style>
+
+<!-- app/views/auctions/_form.html.erb -->
+<%= form_with(model: auction, local: true, html: { multipart: true, class: "auction-form" }) do |f| %>
+  <% if auction.errors.any? %>
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <div>
+        <strong><%= pluralize(auction.errors.count, "erreur") %> :</strong>
+        <ul class="mb-0">
+          <% auction.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <!-- GAUCHE -->
+    <div class="col-lg-8">
+      <!-- TITRE -->
+      <div class="mb-4">
+        <%= f.label :titre, class: "form-label fw-bold" %>
+        <%= f.text_field :titre, class: "form-control form-control-lg", placeholder: "Ex. Cabinet d’avocats – Paris 16e", required: true %>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="mb-4">
+        <%= f.label :description, class: "form-label fw-bold" %>
+        <%= f.text_area :description, class: "form-control", rows: 5, placeholder: "Décrivez le bien ou le fonds de commerce...", required: true %>
+        <div class="form-text">255 caractères minimum recommandés</div>
+      </div>
+
+      <!-- PRIX + LOCALISATION -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <%= f.label :prix_depart, "Prix de départ (#{devise})", class: "form-label fw-bold" %>
+          <div class="input-group">
+            <span class="input-group-text"><%=devise%></span>
+            <%= f.number_field :prix_depart, class: "form-control", min: 0, step: 1000, required: true %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :localisation, class: "form-label fw-bold" %>
+          <%= f.text_field :localisation, class: "form-control", placeholder: "Ex. Lyon 7e", required: true %>
+        </div>
+      </div>
+
+      <!-- DATES -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <%= f.label :debut, "Début", class: "form-label fw-bold" %>
+          <%= f.datetime_local_field :debut, class: "form-control", required: true %>
+          <div class="form-text">Doit être <strong>ultérieur</strong> à maintenant</div>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :fin, "Fin", class: "form-label fw-bold" %>
+          <%= f.datetime_local_field :fin, class: "form-control", required: true %>
+          <div class="form-text">Doit être <strong>après</strong> le début</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROITE : IMAGE + STATUT -->
+    <div class="col-lg-4">
+      <div class="sticky-lg-top" style="top: 1rem;">
+        <!-- IMAGE -->
+        <div class="mb-4">
+          <%= f.label :image, "Photo du bien", class: "form-label fw-bold" %>
+          <div class="input-group">
+            <%= f.file_field :image, class: "form-control", accept: "image/*", aria: { describedby: "imageHelp" } %>
+          </div>
+          <div id="imageHelp" class="form-text">JPG, PNG, max 5 Mo</div>
+
+          <!-- PREVIEW -->
+          <% if auction.image.present? %>
+            <div class="mt-3 text-center">
+              <p class="mb-2">Image actuelle :</p>
+              <%= image_tag auction.image.url, class: "img-preview rounded", id: "imagePreview" %>
+            </div>
+          <% else %>
+            <%= image_tag "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", class: "img-preview rounded mt-3", id: "imagePreview" %>
+          <% end %>
+        </div>
+
+        <!-- STATUT -->
+        <div class="mb-4">
+          <%= f.label :statut, "Statut", class: "form-label fw-bold" %>
+          <%= f.select :statut,
+                       options_for_select(Auction.statuts.keys.map { |s| [s.humanize, s] }, auction.statut),
+                       {},
+                       class: "form-select" %>
+          <div class="form-text">
+            <span class="badge bg-secondary">brouillon</span> non visible publiquement
+          </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="d-grid">
+          <%= f.submit "Sauvegarder", class: "btn btn-primary btn-lg" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.querySelector('input[type="file"][name="auction[image]"]');
+  const preview = document.getElementById("imagePreview");
+  if (!input || !preview) return;
+
+  input.addEventListener("change", () => {
+    const file = input.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = e => preview.src = e.target.result;
+      reader.readAsDataURL(file);
+    }
+  });
+});
+</script>
+
+<script>
+  // app/javascript/validation.js
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".auction-form");
+  if (!form) return;
+
+  const debut = form.querySelector('input[name="auction[debut]"]');
+  const fin   = form.querySelector('input[name="auction[fin]"]');
+  const prix  = form.querySelector('input[name="auction[prix_depart]"]');
+
+  form.addEventListener("submit", e => {
+    const now = new Date();
+    const debutDate = new Date(debut.value);
+    const finDate   = new Date(fin.value);
+
+    if (debutDate <= now) {
+      alert("La date de début doit être dans le futur.");
+      e.preventDefault();
+      return;
+    }
+    if (finDate <= debutDate) {
+      alert("La date de fin doit être après la date de début.");
+      e.preventDefault();
+      return;
+    }
+    if (parseInt(prix.value, 10) <= 0) {
+      alert("Le prix de départ doit être supérieur à 0.");
+      e.preventDefault();
+    }
+  });
+});
+</script>

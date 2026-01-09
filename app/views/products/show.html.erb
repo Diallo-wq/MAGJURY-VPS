@@ -1,0 +1,114 @@
+<%= render 'layouts/home_header' %>
+<style>
+    /* Header */
+        .contact-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+</style>
+<%= content_for :title, "#{@product.title} | Boutique MagJury" %>
+
+<!-- HERO -->
+<section class="contact-header mt-5">
+  <div class="container">
+    <h1 class="display-5 fw-bold"><%= @product.title %></h1>
+    <% if @product.product_category.present? %>
+      <span class="badge bg-light text-dark fs-6"><%= @product.product_category.name %></span>
+    <% end %>
+  </div>
+</section>
+
+
+<main class="container my-5">
+  <div class="row g-4">
+    <!-- COLONNE GAUCHE : IMAGE + META -->
+    <div class="col-lg-6">
+      <div class="sticky-lg-top" style="top: 1rem;">
+        <!-- IMAGE -->
+        <%= image_tag @product.image.attached? ? @product.image : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                      class: "img-fluid rounded-4 shadow-sm", alt: @product.title %>
+
+        <!-- ICÔNE + STATUT -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <span class="badge <%= couleur_statut_produit(@product.status) %> fs-6"><%= @product.stock_display %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE : INFOS + CTA -->
+    <div class="col-lg-6">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <!-- TITRE -->
+          <h2 class="fw-bold mb-3"><%= @product.title %></h2>
+
+          <!-- PRIX -->
+          <div class="price-box mb-4">
+            <% if @product.reduced_price.present? && @product.reduced_price > 0 %>
+              <span class="text-decoration-line-through text-muted fs-5"><%= number_to_currency(@product.price, unit: devise) %></span>
+              <span class="fs-2 fw-bold text-danger"><%= number_to_currency(@product.reduced_price, unit: devise) %></span>
+              <span class="badge bg-danger ms-2">-<%= @product.discount_percent %>%</span>
+            <% else %>
+              <span class="fs-2 fw-bold text-primary"><%= number_to_currency(@product.price, unit: devise) %></span>
+            <% end %>
+          </div>
+
+          <!-- DESCRIPTION -->
+          <div class="description-box mb-4">
+            <%= raw(@product.description) %>
+          </div>
+
+          <!-- BOUTON WHATSAPP -->
+          <div class="d-grid mb-4">
+            <% whatsapp_nb = SiteSetting.current.whatsapp.presence || "0164427200" %>
+								<%= link_to "https://wa.me/#{whatsapp_nb.gsub(/\D/,'')}?text=#{u("Bonjour, je suis intéressé par le produit : #{@product.title} - #{product_url(@product)}")}",
+											target: "_blank",
+											class: "btn-ajouter-panier" do %>
+								<i class="bi bi-whatsapp"></i> commander
+							<% end %>
+          </div>
+
+    
+        </div>
+
+        <!-- ACTIONS ADMIN -->
+        <% if current_user&.admin? %>
+          <div class="card-footer bg-light d-flex justify-content-end gap-2 p-3">
+            <%= link_to "✏ Éditer", edit_product_path(@product), class: "btn btn-outline-primary btn-sm" %>
+            <%= button_to "🗑 Supprimer", product_path(@product), method: :delete,
+                          form: { data: { turbo_confirm: "Supprimer ce produit ?" } },
+                          class: "btn btn-outline-danger btn-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION « PRODUITS SIMILAIRES » -->
+  <% if @similar_products.any? %>
+    <hr class="my-5">
+    <h3 class="mb-4">Produits similaires</h3>
+    <div class="row g-4">
+      <%= render partial: "boutique/card", collection: @similar_products, as: :product %>
+    </div>
+  <% end %>
+</main>

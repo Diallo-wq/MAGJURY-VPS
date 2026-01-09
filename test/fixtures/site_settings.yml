@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site_name: MyString
+  logo: MyString
+  currency: MyString
+  time_zone: MyString
+  tel1: MyString
+  tel2: MyString
+  whatsapp: MyString
+  facebook: MyString
+  linkedin: MyString
+  instagram: MyString
+  tiktok: MyString
+  youtube: MyString
+  twitter: MyString
+  localisation: MyString
+  devise: MyString
+
+two:
+  site_name: MyString
+  logo: MyString
+  currency: MyString
+  time_zone: MyString
+  tel1: MyString
+  tel2: MyString
+  whatsapp: MyString
+  facebook: MyString
+  linkedin: MyString
+  instagram: MyString
+  tiktok: MyString
+  youtube: MyString
+  twitter: MyString
+  localisation: MyString
+  devise: MyString

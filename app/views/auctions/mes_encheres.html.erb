@@ -1,0 +1,94 @@
+<style>
+.enchere-card {
+  transition: transform .2s, box-shadow .2s;
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.enchere-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.15);
+}
+
+.timer-card {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #dc3545;
+}
+</style>
+
+
+
+<%= content_for :title, "Enchères en cours | MagJury" %>
+
+<section class="hero-encheres admin-header bg-dark text-white py-4">
+  <div class="container text-white text-center py-5">
+    <h1 class="display-5 fw-bold">Mes enchères</h1>
+    <p class="lead">Retrouvez ici toutes les ventes auxquelles vous avez participé</p>
+  </div>
+</section>
+
+<section class="filters-bar bg-light py-3 sticky-top">
+  <div class="container">
+     <%= form_with url: auctions_path, method: :get, local: false, html: { class: "row g-2 mb-4", data: { turbo: false } } do |f| %>
+    <div class="col-md-4"><%= f.text_field :q, placeholder: "Rechercher un titre...", value: params[:q], class: "form-control" %></div>
+    <div class="col-md-3"><%= f.select :statut, options_for_select(Auction.statuts.keys.map { |s| [s.humanize, s] }, params[:statut]), { include_blank: "Tous statuts" }, class: "form-select" %></div>
+    <div class="col-md-3"><%= f.select :loc, options_for_select(Auction.pluck(:localisation).uniq.sort, params[:loc]), { include_blank: "Toutes régions" }, class: "form-select" %></div>
+    <div class="col-md-2 d-grid"><%= f.submit "Filtrer", class: "btn btn-outline-secondary" %></div>
+  <% end %>
+  </div>
+</section>
+
+
+<main class="container my-5">
+  <% if @encheres.empty? %>
+    <div class="text-center py-5">
+      <i class="bi bi-inbox display-1 text-muted"></i>
+      <p class="text-muted fs-5 mt-3">Vous n’avez encore participé à aucune enchère.</p>
+      <%= link_to "Découvrir les ventes", encheres_path, class: "btn btn-warning btn-lg" %>
+    </div>
+  <% else %>
+    <div class="row g-4" id="mes-encheres-cards">
+        <%= render partial: "encheres/enchere_card", collection: @encheres, as: :enchere %>
+    </div>
+  <% end %>
+</main>
+
+
+<script>
+    // app/javascript/encheres_timer.js
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".timer-card").forEach(el => {
+    const sec = parseInt(el.dataset.seconds, 10);
+    const action = el.dataset.action;
+    const id   = el.dataset.id;
+    if (isNaN(sec) || sec <= 0) {
+      el.textContent = "Terminé";
+      if (action) fetchAction(id, action);
+      return;
+    }
+    const interval = setInterval(() => {
+      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+      const s = String(sec % 60).padStart(2, "0");
+      el.textContent = `${h}:${m}:${s}`;
+      if (--sec <= 0) {
+        clearInterval(interval);
+        el.textContent = "Terminé";
+        if (action) fetchAction(id, action);
+      }
+    }, 1000);
+  });
+
+  function fetchAction(id, action) {
+    fetch(`/auctions/${id}/${action}`, {
+      method: "PATCH",
+      headers: { "X-CSRF-Token": document.querySelector("[name='csrf-token']").content }
+    });
+  }
+});
+</script>
+
+<noscript>
+  <div class="alert alert-info">Activez JavaScript pour voir les compteurs en temps réel.</div>
+</noscript>

@@ -1,0 +1,110 @@
+<%= content_for :title, "Paramètres généraux | Admin MagJury" %>
+
+<style>
+  .param-card { border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+  .param-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  .section-title { color: #667eea; font-weight: 600; }
+  .currency-input { max-width: 120px; }
+  .social-input-group { border-radius: 8px; overflow: hidden; }
+  .btn-save { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; }
+  .btn-save:hover { filter: brightness(1.1); }
+</style>
+
+<div class="container my-5">
+  <div class="card param-card shadow-lg">
+    <!-- EN-TÊTE -->
+    <div class="card-header param-header text-white text-center py-4">
+      <h3 class="mb-0"><i class="bi bi-gear-fill me-2"></i> Paramètres généraux</h3>
+    </div>
+    <% if notice %>
+      <div class="alert alert-success"><%= notice %></div>
+    <% end %>
+    <!-- CORPS DU FORMULAIRE -->
+    <div class="card-body p-5">
+      <%= form_with(model: [:admin, @setting], local: true, html: { multipart: true }) do |f| %>
+
+        <!-- 1. IDENTITÉ DU SITE -->
+        <h5 class="section-title mb-3"><i class="bi bi-globe me-2"></i> Identité du site</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :site_name, "Nom du site", class: "form-label fw-bold" %>
+            <%= f.text_field :site_name, class: "form-control", placeholder: "MagJury" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :logo, "Logo (image)", class: "form-label fw-bold" %>
+            <%= f.file_field :logo, class: "form-control", accept: "image/*" %>
+            <% if @setting.logo.present? %>
+              <p class="mt-2">Logo actuel :</p>
+              <%= image_tag @setting.logo, class: "img-thumbnail", width: 120 %>
+            <% end %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :localisation, "Localisation (ville/pays)", class: "form-label fw-bold" %>
+            <%= f.text_field :localisation, class: "form-control", placeholder: "Paris, France" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :site_email, "Email", class: "form-label fw-bold" %>
+            <%= f.text_field :site_email, class: "form-control", placeholder: "contact@magjury.com" %>
+          </div>
+        </div>
+         <div class="row g-3 mb-4">
+          <div class="col-md-12">
+            <%= f.label :description, "Courte description", class: "form-label fw-bold" %>
+            <%= f.text_area :description, class: "tinymce", value: f.object.description%>
+          </div>
+        </div>
+
+        <!-- 2. DEVISE & FUSEAU HORAIRE -->
+        <h5 class="section-title mb-3"><i class="bi bi-clock me-2"></i> Monnaie & temps</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <%= f.label :currency, "Devise", class: "form-label fw-bold" %>
+            <%= f.select :currency, options_for_select(SiteSetting::CURRENCIES.keys, @setting.currency), {}, class: "form-select currency-input" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :time_zone, "Fuseau horaire", class: "form-label fw-bold" %>
+            <%= f.select :time_zone, options_for_select(SiteSetting::TIME_ZONES, @setting.time_zone), {}, class: "form-select" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :devise, "Symbole monétaire affiché", class: "form-label fw-bold" %>
+            <%= f.text_field :devise, class: "form-control text-center", maxlength: 5, placeholder: "€" %>
+          </div>
+        </div>
+
+        <!-- 3. CONTACTS -->
+        <h5 class="section-title mb-3"><i class="bi bi-telephone me-2"></i> Contacts</h5>
+        <div class="row g-3 mb-4">
+          <% %w[tel1 tel2 whatsapp].each do |contact| %>
+            <div class="col-md-4">
+              <%= f.label contact.to_sym, contact.humanize, class: "form-label fw-bold" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-<%= contact == 'whatsapp' ? 'whatsapp' : 'telephone' %>"></i></span>
+                <%= f.telephone_field contact.to_sym, class: "form-control", placeholder: "+33 6 12 34 56 78" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 4. RÉSEAUX SOCIAUX -->
+        <h5 class="section-title mb-3"><i class="bi bi-share me-2"></i> Réseaux sociaux</h5>
+        <div class="row g-3 mb-4">
+          <% %w[facebook linkedin instagram tiktok youtube twitter].each do |network| %>
+            <div class="col-md-6">
+              <%= f.label network.to_sym, network.capitalize, class: "form-label fw-bold" %>
+              <div class="input-group social-input-group">
+                <span class="input-group-text"><i class="bi bi-<%= network == 'twitter' ? 'twitter-x' : network %>"></i></span>
+                <%= f.url_field network.to_sym, class: "form-control", placeholder: "https://#{network}.com/votreprofil" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 5. ACTIONS -->
+        <div class="d-flex justify-content-between align-items-center mt-5">
+          <%= link_to "Annuler", dashboard_index_path, class: "btn btn-outline-secondary px-4" %>
+          <%= f.submit "Mettre à jour", class: "btn btn-save btn-lg px-5" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

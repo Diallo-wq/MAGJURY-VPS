@@ -1,0 +1,131 @@
+<%= content_for :title, "Mon profil | MagJury" %>
+
+<style>
+  .profile-card {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    border: none;
+  }
+  .card-header {
+    border-radius: 10px 10px 0 0 !important;
+    padding: 1.25rem;
+  }
+  .user-details {
+    padding: 0 1rem;
+  }
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .detail-label {
+    width: 40%;
+  }
+  .detail-value {
+    width: 60%;
+    text-align: right;
+  }
+  .badge-success { background-color: #28a745 !important; }
+  .badge-danger { background-color: #dc3545 !important; }
+  .badge-warning { background-color: #ffc107 !important; color: #212529 !important; }
+
+  @media (max-width: 576px) {
+    .detail-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .detail-label, .detail-value {
+      width: 100%;
+      text-align: left;
+    }
+    .detail-value {
+      margin-top: 0.25rem;
+    }
+  }
+</style>
+
+<div class="bg-white px-8 py-8 rounded-3">
+  <div class="container py-5">
+    <div class="card shadow-sm profile-card">
+      <!-- EN-TÊTE DYNAMIQUE -->
+      <div class="card-header bg-primary text-white">
+        <h2 class="h4 mb-0">Mon profil</h2>
+      </div>
+
+      <!-- CORPS : DÉTAILS DYNAMIQUES -->
+      <div class="card-body">
+        <div class="user-details">
+
+          <!-- 1. IDENTITÉ -->
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Nom complet :</span>
+            <span class="detail-value"><%= current_user.full_name %></span>
+          </div>
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Email :</span>
+            <span class="detail-value"><%= current_user.email %></span>
+          </div>
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Téléphone :</span>
+            <span class="detail-value"><%= current_user.phone.presence || "—" %></span>
+          </div>
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Adresse :</span>
+            <span class="detail-value"><%= current_user.address.presence || "—" %></span>
+          </div>
+
+          <!-- 2. MÉTIER -->
+          <% if current_user.profession.present? || current_user.domaine.present? %>
+            <div class="detail-item py-3 border-bottom">
+              <span class="detail-label font-weight-bold text-muted">Métier :</span>
+              <span class="detail-value"><%= [current_user.profession, current_user.domaine].compact.join(" · ") %></span>
+            </div>
+          <% end %>
+
+          <!-- 3. RÔLE & STATUT -->
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Rôle :</span>
+            <span class="detail-value">
+              <span class="badge <%= current_user.role == 'admin' ? 'bg-danger' : 'bg-info' %>"><%= current_user.role.humanize %></span>
+            </span>
+          </div>
+          <div class="detail-item py-3 border-bottom">
+            <span class="detail-label font-weight-bold text-muted">Contributeur :</span>
+            <span class="detail-value">
+              <span class="badge <%= current_user.contrib_contributor? ? 'badge-warning' : 'bg-secondary' %>"><%= current_user.contrib_contributor? ? "Oui" : "Non" %></span>
+            </span>
+          </div>
+
+          <!-- 4. BIO -->
+          <% if current_user.bio.present? %>
+            <div class="detail-item py-3 border-bottom">
+              <span class="detail-label font-weight-bold text-muted">Biographie :</span>
+              <span class="detail-value"><%= simple_format(truncate(current_user.bio, length: 200)) %></span>
+            </div>
+          <% end %>
+
+          <!-- 5. RÉSEAUX SOCIAUX -->
+          <% if current_user.social_links.any? %>
+            <div class="detail-item py-3 border-bottom">
+              <span class="detail-label font-weight-bold text-muted">Réseaux :</span>
+              <span class="detail-value">
+                <% current_user.social_links.each do |platform, url| %>
+                  <%= link_to url, target: "_blank", class: "btn btn-sm btn-outline-secondary me-1", title: platform.capitalize do %>
+                    <i class="bi bi-<%= platform %>"></i>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- BOUTON ACTION -->
+        <div class="text-center mt-4">
+          <%= link_to "Modifier mon profil", edit_user_registration_path, class: "btn btn-primary px-4" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

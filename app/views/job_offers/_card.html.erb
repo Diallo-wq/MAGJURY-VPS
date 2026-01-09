@@ -1,0 +1,51 @@
+<!-- app/views/job_offers/_card.html.erb -->
+<div class="col-md-12 mb-4">
+  <div class="job-card featured">
+    <% if offer.contract_cdi? %>
+      <div class="job-badge badge-featured">CDI</div>
+    <% end %>
+
+    <div class="job-header">
+      <h3 class="job-title">
+        <%= link_to offer.title, job_offer_path(offer) %>
+      </h3>
+      <div class="job-company">
+        <div class="company-logo">MJ</div>
+        <div class="company-info">
+          <h5><%= offer.company %></h5>
+          <span><%= offer.location %></span>
+        </div>
+      </div>
+      <div class="job-meta">
+        <div class="meta-item">
+          <i class="bi bi-briefcase"></i>
+          <span><%= offer.contract_type.humanize %></span>
+        </div>
+        <div class="meta-item">
+          <i class="bi bi-geo-alt"></i>
+          <span><%= offer.location %></span>
+        </div>
+        <div class="meta-item">
+          <i class="bi bi-clock"></i>
+          <span>Publiée <%= time_ago_in_words(offer.created_at) %> ago</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="job-content">
+      <p class="job-description">
+        <%= raw(truncate(strip_tags(offer.description), length: 200)) %>
+      </p>
+      <div class="job-tags">
+        <% offer.description.scan(/\w+/).uniq.take(4).each do |tag| %>
+          <span class="job-tag"><%= tag.capitalize %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="job-footer">
+      <div class="job-salary"><%= offer.salary %></div>
+      <%= link_to "Postuler via WhatsApp", "https://wa.me/?text=#{u(offer.whatsapp_message)}", target: "_blank", class: "btn btn-warning btn-sm" %>
+    </div>
+  </div>
+</div>

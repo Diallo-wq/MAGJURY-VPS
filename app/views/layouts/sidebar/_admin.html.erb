@@ -1,0 +1,185 @@
+<nav class="ux-sidebar" id="uxSidebar" data-turbo="false">
+  <div class="ux-sidebar-head">
+    <i class="fa fa-layer-group ux-logo"></i>
+    <span class="ux-brand">Tableau de bord</span>
+    <button class="ux-close-btn d-lg-none" id="uxCloseSidebar">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+
+  <%if current_user.admin? || current_user.super_admin?%>
+  
+    <ul class="ux-nav">
+      <!-- ACCUEIL -->
+      <li class="ux-nav-item active">
+        <a href="<%= dashboard_index_path %>" class="ux-nav-link">
+          <i class="fa fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <!-- POSTS (Articles, Catégories, Commentaires) -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-file-text"></i>
+          <span>Posts</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_post_path %>"><i class="fa fa-plus"></i> Nouvel article</a></li>
+          <li><a href="<%= posts_path %>"><i class="fa fa-list"></i> Liste des articles</a></li>
+          <li><a href="<%= categories_path %>"><i class="fa fa-tags"></i> Catégories</a></li>
+          <li><a href="<%= tags_path %>"><i class="fa fa-tags"></i> Etiquettes</a></li>
+          <li><a href="<%= admin_comments_path %>"><i class="fa fa-comments"></i> Commentaires</a></li>
+        </ul>
+      </li>
+
+      <!-- BOUTIQUE -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-store"></i>
+          <span>Boutique</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_product_path %>"><i class="fa fa-plus"></i> Ajouter un produit</a></li>
+          <li><a href="<%= products_path %>"><i class="fa fa-list"></i> Produits</a></li>
+          <li><a href="<%= product_categories_path %>"><i class="fa fa-tags"></i> Catégories</a></li>
+        </ul>
+      </li>
+
+      <!-- JOB OFFERS -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-briefcase"></i>
+          <span>Offres d’emploi</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_job_offer_path %>"><i class="fa fa-plus"></i> Nouvelle offre</a></li>
+          <li><a href="<%= job_offers_path %>"><i class="fa fa-list"></i> Liste des offres</a></li>
+        </ul>
+      </li>
+
+      <!-- SERVICES -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-tools"></i>
+          <span>Services</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_service_path %>"><i class="fa fa-plus"></i> Nouveau service</a></li>
+          <li><a href="<%= services_path %>"><i class="fa fa-list"></i> Liste des services</a></li>
+        </ul>
+      </li>
+
+      <!-- ENCHÈRES -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-gavel"></i>
+          <span>Enchères</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_auction_path %>"><i class="fa fa-plus"></i> Nouvelle enchère</a></li>
+          <li><a href="<%= auctions_path %>"><i class="fa fa-list"></i> Liste des enchères</a></li>
+        </ul>
+      </li>
+
+      <!-- GESTION DES UTILISATEURS (regroupé) -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-users"></i>
+          <span>Utilisateurs</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= admin_users_path %>"><i class="fa fa-list"></i> Liste des utilisateurs</a></li>
+          <li><a href="<%= user_profile_path %>"><i class="fa fa-user"></i> Mon profil</a></li>
+          <li><a href="<%= edit_user_registration_path %>"><i class="fa fa-pencil"></i> Modifier mon compte</a></li>
+        </ul>
+      </li>
+
+      <!-- PARAMÈTRES GÉNÉRAUX -->
+      <li class="ux-nav-item">
+        <a href="<%= edit_admin_site_setting_path %>" class="ux-nav-link">
+          <i class="fa fa-gear"></i>
+          <span>Configuration Générale</span>
+        </a>
+      </li>
+    </ul>
+
+  <%elsif current_user.redacteur?%>
+
+    <ul class="ux-nav">
+      <!-- ACCUEIL -->
+      <li class="ux-nav-item active">
+        <a href="<%= dashboard_index_path %>" class="ux-nav-link">
+          <i class="fa fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <!-- POSTS (Articles, Catégories, Commentaires) -->
+      <li class="ux-nav-item has-dropdown">
+        <a href="#" class="ux-nav-link">
+          <i class="fa fa-file-text"></i>
+          <span>Posts</span>
+          <i class="fa fa-chevron-down ms-auto"></i>
+        </a>
+        <ul class="ux-dropdown">
+          <li><a href="<%= new_post_path %>"><i class="fa fa-plus"></i> Nouvel article</a></li>
+          <li><a href="<%= posts_path %>"><i class="fa fa-list"></i> Liste des articles</a></li>
+          <li><a href="<%= categories_path %>"><i class="fa fa-tags"></i> Catégories</a></li>
+          <li><a href="<%= tags_path %>"><i class="fa fa-tags"></i> Etiquettes</a></li>
+          <li><a href="<%= admin_comments_path %>"><i class="fa fa-comments"></i> Commentaires</a></li>
+        </ul>
+      </li>
+
+      <li class="ux-nav-item"><a href="<%= mes_encheres_path %>"><i class="fa fa-gavel"></i> Mes enchères</a></li>
+      <li class="ux-nav-item"><a href="<%= user_profile_path %>"><i class="fa fa-user"></i> Mon profil</a></li>
+      <li class="ux-nav-item"><a href="<%= edit_user_registration_path %>"><i class="fa fa-pencil"></i> Modifier mon compte</a></li>
+    </ul>
+
+  <%elsif current_user.bidder?%>
+
+   <ul class="ux-nav">
+    <li class="ux-nav-item"><a href="<%= mes_encheres_path %>" class="ux-nav-link"><i class="fa fa-gavel"></i> Mes enchères</a></li>
+    <li class="ux-nav-item"><a href="<%= user_profile_path %>" class="ux-nav-link"><i class="fa fa-user"></i> Mon profil</a></li>
+    <li class="ux-nav-item"><a href="<%= edit_user_registration_path %>" class="ux-nav-link"><i class="fa fa-pencil"></i> Modifier mon compte</a></li>
+  </ul>
+
+    
+  <%else%>
+
+   <ul class="ux-nav">
+    <li class="ux-nav-item"><a href="<%= user_profile_path %>" class="ux-nav-link"><i class="fa fa-user"></i> Mon profil</a></li>
+    <li class="ux-nav-item"><a href="<%= edit_user_registration_path %>" class="ux-nav-link"><i class="fa fa-pencil"></i> Modifier mon compte</a></li>
+  </ul>
+
+  <%end%>
+  <!-- MODE NUIT (inchangé) -->
+  <div class="ux-sidebar-foot">
+    <div class="ux-theme-switch">
+      <input type="checkbox" id="uxThemeToggle" />
+      <label for="uxThemeToggle" class="ux-theme-label">
+        <i class="fa fa-sun"></i>
+        <i class="fa fa-moon"></i>
+        <span class="ux-theme-ball"></span>
+      </label>
+    </div>
+    <% if user_signed_in? %>
+      <li class="header-nav-submenu__item mb-5">
+        <%= button_to logout_path, method: :delete, class: "ux-btn-logout", form_class: "d-inline" do %>
+          <i class="fa fa-right-from-bracket"></i>
+          Déconnexion
+        <% end %>
+      </li>
+    <% end %>
+  </div>
+</nav>
+
+<!-- Overlay mobile -->
+<div class="ux-overlay d-lg-none" id="uxOverlay"></div>

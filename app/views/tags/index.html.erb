@@ -1,0 +1,92 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h5 mb-0"><i class="bi bi-tags me-1"></i> Étiquettes</h1>
+  <%= link_to new_tag_path, class: "btn btn-primary btn-sm" do %>
+    <i class="bi bi-plus-lg"></i> Ajouter
+  <% end %>
+</div>
+
+<!-- Recherche -->
+<div class="card shadow-sm mb-3">
+  <div class="card-body py-2">
+    <input type="text" id="tagSearch" class="form-control form-control-sm" placeholder="Rechercher une étiquette…">
+  </div>
+</div>
+
+<!-- Nuage de tags -->
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div id="tagCloud" class="d-flex flex-wrap gap-2">
+      <% @tags.each do |tag| %>
+        <span class="badge bg-secondary fs-6 d-inline-flex align-items-center px-3 py-2"
+              data-name="<%= tag.name.downcase %>"
+              id="tag-<%= tag.id %>">
+
+          <!-- Mode lecture -->
+          <span class="tag-text"><%= tag.name %></span>
+
+          <!-- Mode édition (caché) -->
+          <%= form_with model: tag, local: true, html: { class: "d-none tag-form", style: "display:inline-flex;gap:4px;" } do |f| %>
+            <%= f.text_field :name, class: "form-control form-control-sm", style: "width:130px" %>
+            <%= button_tag class: "btn btn-sm btn-link text-white p-0 lh-1" do %>
+              <i class="bi bi-check-lg"></i>
+            <% end %>
+          <% end %>
+
+          <!-- Crayon : passe en édition -->
+          <button class="btn btn-sm btn-link text-white ms-2 p-0 lh-1 edit-tag" title="Modifier">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+
+          <!-- Suppression (uniquement si non utilisée) -->
+          <% unless tag.posts.exists? %>
+            <button class="btn btn-sm btn-link text-white ms-1 p-0 lh-1" data-bs-toggle="modal" data-bs-target="#delTag<%= tag.id %>" title="Supprimer">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+
+            <!-- Modal mini -->
+            <div class="modal fade" id="delTag<%= tag.id %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body text-center">
+                    <p class="mb-2">Supprimer <strong><%= tag.name %></strong> ?</p>
+                    <p class="text-muted small mb-3">Aucun article n’est lié.</p>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                      <%= button_to "Supprimer", tag_path(tag), method: :delete, class: "btn btn-danger" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+// Recherche en temps réel
+const search = document.getElementById('tagSearch');
+const cloud  = document.getElementById('tagCloud');
+search.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  cloud.querySelectorAll('.badge').forEach(b => {
+    b.style.display = b.dataset.name.includes(q) ? '' : 'none';
+  });
+});
+
+// Passage édition / lecture
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.edit-tag').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const badge = btn.closest('.badge');
+      badge.querySelector('.tag-text').classList.add('d-none');
+      badge.querySelector('.tag-form').classList.remove('d-none');
+      btn.classList.add('d-none');
+    });
+  });
+});
+</script>

@@ -1,0 +1,895 @@
+<%= render 'layouts/home_header' %>
+    
+    <style>
+        :root {
+            --magjury-gold: #c9a96e;
+            --magjury-gold-light: #e6d6b8;
+            --magjury-gold-dark: #a8874c;
+            --magjury-dark: #0a0a12;
+            --magjury-dark-light: #1a1a24;
+            --magjury-light: #f8f9fa;
+            --magjury-gray: #e9ecef;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        body {
+            background-color: var(--magjury-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Header */
+        .boutique-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .boutique-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .boutique-nav {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 2px solid var(--magjury-gold);
+            color: var(--magjury-gold);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--magjury-gold);
+            color: white;
+        }
+
+        /* Filtres */
+        .filters-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group h6 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--magjury-dark);
+        }
+
+        .price-slider {
+            width: 100%;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .price-inputs input {
+            width: 100px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            background: var(--magjury-gray);
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-tag.active {
+            background: var(--magjury-gold);
+            color: white;
+        }
+
+        /* Produits Grid */
+        .produits-grid {
+            padding: 30px 0;
+        }
+
+        .produit-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .produit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .produit-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--magjury-gold);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .produit-badge.promo {
+            background: var(--danger);
+        }
+
+        .produit-badge.nouveau {
+            background: var(--success);
+        }
+
+        .produit-image {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+        }
+
+        .produit-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .produit-card:hover .produit-image img {
+            transform: scale(1.05);
+        }
+
+        .produit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 40%, rgba(10, 10, 18, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .produit-card:hover .produit-overlay {
+            opacity: 1;
+        }
+
+        .btn-ajouter-panier {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--magjury-gold);
+            color: var(--magjury-dark);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-ajouter-panier:hover {
+            background: var(--magjury-gold-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-details {
+            color: var(--magjury-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            width: 100%;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .btn-details:hover {
+            color: var(--magjury-gold);
+        }
+
+        .produit-content {
+            padding: 20px;
+        }
+
+        .produit-titre {
+            margin: 0 0 10px 0;
+        }
+
+        .produit-titre a {
+            color: var(--magjury-dark);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .produit-titre a:hover {
+            color: var(--magjury-gold);
+        }
+
+        .produit-categorie {
+            color: var(--magjury-gold);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .produit-prix {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .prix-actuel {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--magjury-dark);
+        }
+
+        .prix-original {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-decoration: line-through;
+        }
+
+        .produit-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            color: #e4e5e9;
+            font-size: 0.8rem;
+        }
+
+        .star.filled {
+            color: #ffc107;
+        }
+
+        .rating-count {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .produit-stock {
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .stock-faible {
+            color: var(--danger);
+        }
+
+        /* Panier Sidebar */
+        .panier-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 100px;
+        }
+
+        .panier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--magjury-gold);
+        }
+
+        .panier-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .panier-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--magjury-gray);
+        }
+
+        .panier-item:last-child {
+            border-bottom: none;
+        }
+
+        .panier-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .panier-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .panier-item-details {
+            flex: 1;
+        }
+
+        .panier-item-details h6 {
+            margin: 0 0 5px 0;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .panier-item-price {
+            color: var(--magjury-gold);
+            font-weight: 600;
+        }
+
+        .panier-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--magjury-gold);
+            color: white;
+            border-color: var(--magjury-gold);
+        }
+
+        .panier-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--magjury-gray);
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-final {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--magjury-dark);
+        }
+
+        /* Pagination */
+        .pagination-custom .page-link {
+            border: 2px solid var(--magjury-gray);
+            color: var(--magjury-dark);
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .pagination-custom .page-item.active .page-link {
+            background: var(--magjury-gold);
+            border-color: var(--magjury-gold);
+            color: white;
+        }
+
+        .pagination-custom .page-link:hover {
+            border-color: var(--magjury-gold);
+            color: var(--magjury-gold);
+        }
+
+        /* Footer */
+        .boutique-footer {
+            background: var(--magjury-dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        /* Modal Produit */
+        .produit-modal .modal-content {
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .produit-gallery {
+            position: relative;
+        }
+
+        .produit-gallery-main {
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .produit-gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .produit-gallery-thumbs {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gallery-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .gallery-thumb.active {
+            border-color: var(--magjury-gold);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .boutique-header {
+                padding: 60px 0 30px;
+            }
+            
+            .nav-categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .produit-image {
+                height: 200px;
+            }
+            
+            .panier-sidebar {
+                position: static;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filters-section {
+                padding: 20px;
+            }
+            
+            .produit-content {
+                padding: 15px;
+            }
+            
+            .produit-titre a {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .produit-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+
+    <%= content_for :title, "Boutique | MagJury" %>
+
+<!-- Header -->
+<header class="boutique-header mt-5">
+  <div class="container">
+    <div class="header-content text-center">
+      <h1 class="display-4 fw-bold mb-3">Boutique MAGJURY</h1>
+      <p class="lead mb-4">Découvrez notre sélection d'œuvres juridiques et judiciaires</p>
+      <div class="search-bar mx-auto" style="max-width: 500px;">
+        <%= form_with url: boutique_path, method: :get, local: false, html: { class: "input-group" } do |f| %>
+          <%= f.text_field :q, value: params[:q], class: "form-control form-control-lg", placeholder: "Rechercher un produit...", style: 'width:80%;'%>
+          <%= f.submit "🔍", class: "btn btn-warning", style: 'width:20%;' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container my-5">
+ <div class="row">
+  <!-- Sidebar Filtres -->
+  <div class="col-lg-3">
+    <%= form_with url: boutique_path, method: :get, local: false, html: { class: "filters-section" } do |f| %>
+      <h5 class="fw-bold mb-4">Filtres</h5>
+
+      <!-- Catégories -->
+      <div class="filter-group">
+        <h6>Catégories</h6>
+        <div class="filter-tags">
+          <%= link_to "Tous", boutique_path, class: "filter-tag #{'active' if params[:category].blank?}" %>
+          <% @categories.each do |cat| %>
+            <%= link_to cat.name, boutique_path(category: cat.id), class: "filter-tag #{'active' if params[:category].to_i == cat.id}" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Statut / disponibilité -->
+      <div class="filter-group">
+        <h6>Disponibilité</h6>
+        <div class="form-check">
+          <%= check_box_tag "en_stock", "1", params[:en_stock] == "1", class: "form-check-input", onchange: "this.form.requestSubmit()" %>
+          <%= label_tag "en_stock", "En stock uniquement", class: "form-check-label" %>
+        </div>
+      </div>
+
+      <%= submit_tag "Appliquer", class: "btn btn-warning w-100 mt-3" %>
+    <% end %>
+  </div>
+
+    <!-- Produits Grid -->
+    <div class="col-lg-9">
+      <!-- En-tête -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h4 class="fw-bold mb-0">Nos produits</h4>
+          <p class="text-muted mb-0"><%= pluralize(@products.size, "produit") %> trouvés</p>
+        </div>
+        <div class="d-flex gap-3">
+          <%= select_tag "sort", options_for_select([["Pertinence", ""], ["Prix croissant", "price_asc"], ["Prix décroissant", "price_desc"]], params[:sort]),
+                         class: "form-select", style: "width: auto;", onchange: "this.form.requestSubmit()" %>
+        </div>
+      </div>
+
+      <!-- Grille -->
+      <div class="produits-grid">
+        <div class="row" id="produitsContainer">
+          <%= render partial: "boutique/card", collection: @products, as: :product %>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+  
+
+    <!-- Modal Produit -->
+    <div class="modal fade produit-modal" id="produitModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails du produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="produit-gallery">
+                                <div class="produit-gallery-main">
+                                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                                         alt="Produit détaillé">
+                                </div>
+                                <div class="produit-gallery-thumbs">
+                                    <div class="gallery-thumb active">
+                                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
+                                             alt="Miniature">
+                                    </div>
+                                    <div class="gallery-thumb">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
+                                             alt="Miniature">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Code Civil 2024 - Édition annotée</h3>
+                            <div class="produit-rating mb-3">
+                                <div class="stars">
+                                    <i class="fas fa-star star filled"></i>
+                                    <i class="fas fa-star star filled"></i>
+                                    <i class="fas fa-star star filled"></i>
+                                    <i class="fas fa-star star filled"></i>
+                                    <i class="fas fa-star star"></i>
+                                </div>
+                                <span class="rating-count">(128 avis)</span>
+                            </div>
+                            
+                            <div class="produit-prix mb-3">
+                                <span class="prix-actuel h4">$45.99</span>
+                                <span class="prix-original">$59.99</span>
+                                <span class="badge bg-danger ms-2">-23%</span>
+                            </div>
+                            
+                            <p class="text-muted mb-4">Édition 2024 entièrement mise à jour avec les dernières réformes législatives. Annotations jurisprudentielles et commentaires des meilleurs experts.</p>
+                            
+                            <div class="mb-4">
+                                <h6>Caractéristiques :</h6>
+                                <ul>
+                                    <li>Format broché - 850 pages</li>
+                                    <li>ISBN : 978-2-1234-5678-9</li>
+                                    <li>Éditeur : Éditions MAGJURY</li>
+                                    <li>Langue : Français</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex gap-3 mb-4">
+                                <div class="flex-grow-1">
+                                    <label class="form-label">Quantité</label>
+                                    <select class="form-select">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <label class="form-label">Format</label>
+                                    <select class="form-select">
+                                        <option>Broché</option>
+                                        <option>Numérique (PDF)</option>
+                                        <option>Bundle (Broché + PDF)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-warning btn-lg" onclick="ajouterAuPanier(1)">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Ajouter au panier
+                                </button>
+                                <button class="btn btn-outline-warning">
+                                    <i class="fas fa-heart me-2"></i>
+                                    Ajouter aux favoris
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%= render 'layouts/home_footer' %>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        Produit ajouté au panier !
+    </div>
+
+    <!-- Bootstrap & JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Gestion du panier
+        let panier = [];
+
+        function ajouterAuPanier(produitId) {
+            // Simulation d'ajout au panier
+            panier.push(produitId);
+            
+            // Mettre à jour le compteur du panier
+            const badgePanier = document.querySelector('.panier-sidebar .badge');
+            badgePanier.textContent = panier.length;
+            
+            // Afficher la notification
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+            
+            // Animation du produit
+            const produitCard = event.target.closest('.produit-card');
+            produitCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                produitCard.style.transform = '';
+            }, 300);
+        }
+
+        // Filtrage des produits
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const filterTags = document.querySelectorAll('.filter-tag');
+
+            // Filtrage par catégorie
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Filtrage par tags
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+
+            // Recherche en temps réel
+            const searchInput = document.querySelector('input[type="text"]');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const produits = document.querySelectorAll('.produit-card');
+                
+                produits.forEach(produit => {
+                    const titre = produit.querySelector('.produit-titre').textContent.toLowerCase();
+                    const categorie = produit.querySelector('.produit-categorie').textContent.toLowerCase();
+                    
+                    if (titre.includes(searchTerm) || categorie.includes(searchTerm)) {
+                        produit.style.display = 'block';
+                    } else {
+                        produit.style.display = 'none';
+                    }
+                });
+            });
+
+            // Gestion des quantités dans le panier
+            const quantityBtns = document.querySelectorAll('.quantity-btn');
+            quantityBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const quantityElement = this.parentElement.querySelector('span');
+                    let quantity = parseInt(quantityElement.textContent);
+                    
+                    if (this.textContent === '+') {
+                        quantity++;
+                    } else if (this.textContent === '-' && quantity > 1) {
+                        quantity--;
+                    }
+                    
+                    quantityElement.textContent = quantity;
+                });
+            });
+
+            // Animation au scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            const produitCards = document.querySelectorAll('.produit-card');
+            produitCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+
+        // Gestion de la galerie produit
+        const galleryThumbs = document.querySelectorAll('.gallery-thumb');
+        const galleryMain = document.querySelector('.produit-gallery-main img');
+
+        galleryThumbs.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                galleryThumbs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                galleryMain.src = this.querySelector('img').src;
+            });
+        });
+    </script>

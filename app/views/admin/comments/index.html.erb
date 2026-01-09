@@ -1,0 +1,78 @@
+<style>
+    /* app/assets/stylesheets/admin.css */
+.table-danger { --bs-table-bg: #f8d7da; }
+.admin-header { background: #1f2937; }
+</style>
+
+<%= content_for :title, "Admin - Commentaires" %>
+
+<section class="admin-header bg-dark text-white py-4">
+  <div class="container">
+    <h1 class="mb-0">Gestion des commentaires</h1>
+  </div>
+</section>
+
+<div class="container my-4">
+  <!-- BARRE & FILTRES -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="badge bg-secondary"><%= @comments.count %> commentaires</span>
+  </div>
+
+  <%= form_with url: admin_comments_path, method: :get, local: false, html: { class: "row g-2 mb-4" } do |f| %>
+    <div class="col-md-4"><%= f.text_field :q, placeholder: "Rechercher dans le texte...", value: params[:q], class: "form-control" %></div>
+    <div class="col-md-3"><%= f.select :flagged, options_for_select([["Tous", ""], ["Signalés uniquement", "1"]], params[:flagged]), {}, class: "form-select" %></div>
+    <div class="col-md-3"><%= f.select :post_id, options_from_collection_for_select(Post.order(:title), :id, :title, params[:post_id]), { include_blank: "Tous posts" }, class: "form-select" %></div>
+    <div class="col-md-2 d-grid"><%= f.submit "Filtrer", class: "btn btn-outline-secondary" %></div>
+  <% end %>
+
+  <!-- TABLEAU -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Auteur</th>
+          <th>Post</th>
+          <th>Commentaire</th>
+          <th>Date</th>
+          <th>Signalé</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @comments.each do |comment| %>
+          <tr class="<%= 'table-danger' if comment.flagged? %>">
+            <td>
+              <div class="d-flex align-items-center">
+                <%= image_tag comment.user.profile.presence || "2.jpg", class: "rounded-circle me-2", width: 32, height: 32, alt: "" %>
+                <div>
+                  <div class="fw-bold"><%= comment.user.nom %> <%= comment.user.prenom %></div>
+                  <small class="text-muted"><%= comment.user.email %></small>
+                </div>
+              </div>
+            </td>
+            <td><%= link_to comment.post.title, post_path(comment.post), target: "_blank", class: "text-decoration-none" %></td>
+            <td>
+              <div class="text-truncate" style="max-width: 300px;" title="<%= comment.body %>"><%= simple_format(truncate(comment.body, length: 120)) %></div>
+            </td>
+            <td><%= l(comment.created_at, format: :short) %></td>
+            <td><%= render "admin/comments/badge_flagged", flagged: comment.flagged? %></td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <%= button_to (comment.flagged? ? "Désignaler" : "Signaler"), admin_comment_path(comment), method: :patch, class: "btn btn-outline-warning btn-sm" %>
+                <%= button_to "Supprimer", admin_comment_path(comment), method: :delete,
+                              form: { data: { turbo_confirm: "Supprimer ce commentaire ?" } },
+                              class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @comments.empty? %>
+    <div class="text-center py-5">
+      <p class="text-muted fs-5">Aucun commentaire trouvé.</p>
+    </div>
+  <% end %>
+</div>

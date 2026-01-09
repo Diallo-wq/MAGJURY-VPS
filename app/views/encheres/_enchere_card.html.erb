@@ -1,0 +1,53 @@
+<!-- app/views/encheres/_enchere_card.html.erb -->
+<div class="col-12 col-md-6 col-lg-4">
+  <div class="card enchere-card h-100">
+    <%= image_tag enchere.image.presence || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  class: "card-img-top", alt: enchere.titre %>
+
+    <div class="card-body d-flex flex-column">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <span class="badge bg-<%= couleur_statut(enchere.statut) %>">
+          <%= enchere.statut.humanize %>
+        </span>
+        <span class="text-muted small">
+          <%= enchere.localisation %>
+        </span>
+      </div>
+
+      <h5 class="card-title"><%= enchere.titre %></h5>
+      <p class="card-text flex-grow-1"><%= truncate(enchere.description, length: 90) %></p>
+
+      <div class="row text-center mb-3">
+        <div class="col-6">
+          <div class="fw-bold"><%= number_to_currency(enchere.prix_actuel || enchere.prix_depart, unit: devise, format: "%n") %></div>
+          <small class="text-muted">Prix actuel</small>
+        </div>
+        <div class="col-6">
+          <div class="fw-bold"><%= enchere.nombre_mises %></div>
+          <small class="text-muted">Mises</small>
+        </div>
+      </div>
+
+      <!-- TIMER SUR CARTE -->
+      <div class="text-center mb-3">
+        <% if enchere.bientot? %>
+          <small>Ouverture dans</small>
+          <div class="timer-card" data-seconds="<%= enchere.temps_avant_ouverture %>" data-action="start" data-id="<%= enchere.id %>"></div>
+        <% elsif enchere.en_cours? %>
+          <small>Se termine dans</small>
+          <div class="timer-card" data-seconds="<%= enchere.temps_restant %>" data-action="close" data-id="<%= enchere.id %>"></div>
+        <% else %>
+          <span class="badge bg-dark">Terminée</span>
+        <% end %>
+      </div>
+
+      <div class="mt-auto d-grid">
+        <% if enchere.en_cours? %>
+          <%= link_to "Enchérir maintenant", auction_path(enchere), class: "btn btn-warning" %>
+        <% else %>
+          <%= link_to "Voir les détails", auction_path(enchere), class: "btn btn-outline-warning" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

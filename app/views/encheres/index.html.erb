@@ -1,0 +1,140 @@
+<style>
+
+   /* Header */
+        .contact-header {
+            background: linear-gradient(135deg, var(--magjury-dark) 0%, var(--magjury-dark-light) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><path fill="%23c9a96e" d="M500 100c110 0 200 90 200 200s-90 200-200 200-200-90-200-200 90-200 200-200zm0-100c165 0 300 135 300 300s-135 300-300 300-300-135-300-300 135-300 300-300z"/></svg>');
+            background-size: 200px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+    /* app/assets/stylesheets/encheres.css */
+.hero-encheres {
+  background: linear-gradient(135deg, #ff9a00 0%, #ffcc00 100%);
+}
+
+.enchere-card {
+  transition: transform .2s, box-shadow .2s;
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.enchere-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.15);
+}
+
+.timer-card {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #dc3545;
+}
+</style>
+
+<%= render 'layouts/home_header' %>
+
+<%= content_for :title, "Enchères en cours | MagJury" %>
+
+
+<header class="contact-header mt-5">
+        <div class="container">
+            <div class="header-content text-center">
+                <h1 class="display-4 fw-bold mb-3">Ventes aux enchères</h1>
+                <p class="lead mb-4">Trouvez votre prochain investissement en quelques clics</p>
+            </div>
+        </div>
+    </header>
+
+
+<section class="filters-bar bg-light py-3 sticky-top">
+  <div class="container">
+    <%= form_with url: encheres_path, method: :get, local: false, html: { class: "row g-2", data: { turbo: false } } do |f| %>
+      <div class="col-md-3">
+        <%= f.select :status, options_for_select(@statuses.map { |s| [Auction.human_attribute_name("statut.#{s}"), s] }, params[:status]),
+                     { include_blank: "Tous statuts" }, class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-3">
+        <%= f.select :prix_max, options_for_select([["< 50 k#{devise}", 50000], ["50-100 k#{devise}", 100000], ["100-500 k#{devise}", 500000], ["+ 500 k#{devise}", 999999999]], params[:prix_max]),
+                     { include_blank: "Tous prix" }, class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-3">
+        <%= f.select :loc, options_for_select(@locs, params[:loc]),
+                     { include_blank: "Toutes régions" }, class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-3 d-grid">
+        <%= f.submit "Filtrer", class: "btn btn-sm btn-outline-primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<main class="container my-5">
+  <div class="row g-4" id="enchere-cards">
+    <%= render partial: "enchere_card", collection: @encheres, as: :enchere %>
+  </div>
+
+  <% if @encheres.empty? %>
+    <div class="text-center py-5">
+      <i class="bi bi-inbox display-1 text-muted"></i>
+      <p class="text-muted fs-5">Aucune enchère ne correspond à vos critères.</p>
+    </div>
+  <% end %>
+</main>
+
+<%= render 'layouts/home_footer' %>
+
+
+<script>
+    // app/javascript/encheres_timer.js
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".timer-card").forEach(el => {
+    const sec = parseInt(el.dataset.seconds, 10);
+    const action = el.dataset.action;
+    const id   = el.dataset.id;
+    if (isNaN(sec) || sec <= 0) {
+      el.textContent = "Terminé";
+      if (action) fetchAction(id, action);
+      return;
+    }
+    const interval = setInterval(() => {
+      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+      const s = String(sec % 60).padStart(2, "0");
+      el.textContent = `${h}:${m}:${s}`;
+      if (--sec <= 0) {
+        clearInterval(interval);
+        el.textContent = "Terminé";
+        if (action) fetchAction(id, action);
+      }
+    }, 1000);
+  });
+
+  function fetchAction(id, action) {
+    fetch(`/auctions/${id}/${action}`, {
+      method: "PATCH",
+      headers: { "X-CSRF-Token": document.querySelector("[name='csrf-token']").content }
+    });
+  }
+});
+</script>
+
+<noscript>
+  <div class="alert alert-info">Activez JavaScript pour voir les compteurs en temps réel.</div>
+</noscript>

@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  titre: MyString
+  description: MyText
+  prix_depart: 1
+  prix_actuel: 1
+  nombre_mises: 1
+  statut: 1
+  debut: 2025-11-26 12:20:56
+  fin: 2025-11-26 12:20:56
+  localisation: MyString
+  user: one
+
+two:
+  titre: MyString
+  description: MyText
+  prix_depart: 1
+  prix_actuel: 1
+  nombre_mises: 1
+  statut: 1
+  debut: 2025-11-26 12:20:56
+  fin: 2025-11-26 12:20:56
+  localisation: MyString
+  user: two

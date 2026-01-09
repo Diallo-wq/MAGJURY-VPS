@@ -1,0 +1,104 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h5 mb-0"><i class="bi bi-folder2 me-1"></i> Catégories de produits</h1>
+  <%= link_to new_product_category_path, class: "btn btn-primary btn-sm" do %>
+    <i class="bi bi-plus-lg"></i> Ajouter
+  <% end %>
+</div>
+
+<!-- Ajout rapide -->
+<div class="card shadow-sm mb-3">
+  <div class="card-body py-2">
+    <%= form_with model: @product_category || ProductCategory.new, url: product_categories_path, method: :post, local: true do |f| %>
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <%= f.text_field :name, class: "form-control form-control-sm", placeholder: "Nouvelle catégorie…", required: true %>
+        </div>
+        <div class="col-auto">
+          <%= button_tag type: 'submit', class: "btn btn-success btn-sm" do %>
+            <i class="bi bi-check-lg"></i>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Nuage de catégories -->
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div id="catCloud" class="d-flex flex-wrap gap-2">
+      <% @product_categories.each do |cat| %>
+        <span class="badge bg-primary fs-6 d-inline-flex align-items-center px-3 py-2"
+              data-name="<%= cat.name.downcase %>"
+              id="cat-<%= cat.id %>">
+
+          <!-- Mode lecture -->
+          <span class="cat-text"><%= cat.name %></span>
+          <small class="ms-2 text-white-50"><%= cat.products.count %></small>
+
+          <!-- Mode édition (caché) -->
+          <%= form_with model: cat, local: true, html: { class: "d-none cat-form", style: "display:inline-flex;gap:4px;" } do |f| %>
+            <%= f.text_field :name, class: "form-control form-control-sm", style: "width:130px" %>
+            <%= button_tag class: "btn btn-sm btn-link text-white p-0 lh-1" do %>
+              <i class="bi bi-check-lg"></i>
+            <% end %>
+          <% end %>
+
+          <!-- Crayon -->
+          <button class="btn btn-sm btn-link text-white ms-2 p-0 lh-1 edit-cat" title="Modifier">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+
+          <!-- Suppression (si aucun produit) -->
+          <% unless cat.products.exists? %>
+            <button class="btn btn-sm btn-link text-white ms-1 p-0 lh-1" data-bs-toggle="modal" data-bs-target="#delCat<%= cat.id %>" title="Supprimer">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+
+            <!-- Modal mini -->
+            <div class="modal fade" id="delCat<%= cat.id %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body text-center">
+                    <p class="mb-2">Supprimer <strong><%= cat.name %></strong> ?</p>
+                    <p class="text-muted small mb-3">Aucun produit n’est lié.</p>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                      <%= button_to "Supprimer", product_category_path(cat), method: :delete, class: "btn btn-danger" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+// Recherche en temps réel
+const search = document.getElementById('tagSearch');
+const cloud  = document.getElementById('catCloud');
+search?.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  cloud.querySelectorAll('.badge').forEach(b => {
+    b.style.display = b.dataset.name.includes(q) ? '' : 'none';
+  });
+});
+
+// Edition inline
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.edit-cat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const badge = btn.closest('.badge');
+      badge.querySelector('.cat-text').classList.add('d-none');
+      badge.querySelector('.cat-form').classList.remove('d-none');
+      btn.classList.add('d-none');
+    });
+  });
+});
+</script>

@@ -1,0 +1,141 @@
+<%= content_for :title, "Nouvel utilisateur | Admin MagJury" %>
+
+<style>
+  .new-user-card { border-radius: 16px; overflow: hidden; }
+  .new-header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+  .section-title { color: #28a745; font-weight: 600; }
+  .btn-create { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; }
+  .btn-create:hover { filter: brightness(1.1); }
+  .social-input-group { border-radius: 8px; overflow: hidden; }
+
+</style>
+
+<div class="container my-5">
+  <div class="card new-user-card shadow-lg">
+    <div class="card-header new-header text-white text-center py-4">
+      <h3 class="mb-0"><i class="bi bi-person-plus me-2"></i> Créer un nouvel utilisateur</h3>
+    </div>
+
+    <div class="card-body p-5">
+      <%= form_with(model: [:admin, @user], local: true, html: { multipart: true, class: "needs-validation" }) do |f| %>
+
+        <!-- 1. IDENTITÉ -->
+        <h5 class="section-title mb-3"><i class="bi bi-person-badge me-2"></i> Identité</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :nom, "Nom", class: "form-label fw-bold" %>
+            <%= f.text_field :nom, class: "form-control", placeholder: "Nom de famille", required: true %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :prenom, "Prénom", class: "form-label fw-bold" %>
+            <%= f.text_field :prenom, class: "form-control", placeholder: "Prénom", required: true %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :email, "Email", class: "form-label fw-bold" %>
+            <%= f.email_field :email, class: "form-control", placeholder: "exemple@email.com", required: true %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :phone, "Téléphone", class: "form-label fw-bold" %>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+              <%= f.telephone_field :phone, class: "form-control", placeholder: "+33 6 12 34 56 78" %>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <%= f.label :address, "Adresse", class: "form-label fw-bold" %>
+            <%= f.text_area :address, class: "form-control", rows: 2, placeholder: "Adresse postale complète" %>
+          </div>
+        </div>
+
+        <!-- 2. MÉTIER & CONTRIBUTEUR -->
+        <h5 class="section-title mb-3"><i class="bi bi-briefcase me-2"></i> Métier & visibilité</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <%= f.label :profession, "Profession", class: "form-label fw-bold" %>
+            <%= f.text_field :profession, class: "form-control", placeholder: "Avocat, Juriste, Consultant…" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :domaine, "Domaine d’expertise", class: "form-label fw-bold" %>
+            <%= f.text_field :domaine, class: "form-control", placeholder: "Droit civil, social, affaires…" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :role, "Rôle système", class: "form-label fw-bold" %>
+            <%= f.select :role, options_for_select(User::ROLES, 'user'), {}, class: "form-select" %>
+          </div>
+          <div class="col-md-6 d-flex align-items-center">
+            <div class="form-check form-switch mt-md-3">
+              <%= f.check_box :contributor, class: "form-check-input", id: "contributorSwitch" %>
+              <%= f.label :contributor, "Contributeur (page équipe)", class: "form-check-label", for: "contributorSwitch" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. MOT DE PASSE -->
+        <h5 class="section-title mb-3"><i class="bi bi-key me-2"></i> Mot de passe</h5>
+        <!-- Mot de passe -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+            <%= f.label :password, "Mot de passe", class: "form-label fw-bold" %>
+            <div class="input-with-icon">
+                <%= f.text_field :password,
+                                class: "form-control password-input",
+                                placeholder: "8 caractères minimum",
+                                id: "pwd_text" %>
+            </div>
+            </div>
+
+            <!-- Confirmation -->
+            <div class="col-md-6">
+            <%= f.label :password_confirmation, "Confirmation", class: "form-label fw-bold" %>
+            <div class="input-with-icon">
+                <%= f.text_field :password_confirmation,
+                                class: "form-control password-input",
+                                placeholder: "Retapez le mot de passe",
+                                id: "pwd_confirm_text" %>
+            </div>
+            </div>
+        </div>
+        <!-- 4. BIO -->
+        <h5 class="section-title mb-3"><i class="bi bi-journal-text me-2"></i> Biographie</h5>
+        <div class="mb-4">
+          <%= f.label :bio, "Courte biographie", class: "form-label fw-bold" %>
+          <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Présentez-vous en quelques lignes…" %>
+        </div>
+
+        <!-- 5. RÉSEAUX SOCIAUX -->
+        <h5 class="section-title mb-3"><i class="bi bi-share me-2"></i> Réseaux sociaux</h5>
+        <div class="row g-3 mb-4">
+          <% %w[linkedin twitter facebook instagram tiktok].each do |network| %>
+            <div class="col-md-6">
+              <%= f.label network.to_sym, network.capitalize, class: "form-label fw-bold" %>
+              <div class="input-group social-input-group">
+                <span class="input-group-text"><i class="bi bi-<%= network %>"></i></span>
+                <%= f.url_field network.to_sym, class: "form-control", placeholder: "https://#{network}.com/votreprofil" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 6. ACTIONS -->
+        <div class="d-flex justify-content-between mt-5">
+          <%= link_to "Annuler", admin_users_path, class: "btn btn-outline-secondary btn-lg px-4" %>
+          <%= f.submit "Créer l'utilisateur", class: "btn btn-create btn-lg px-5" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.toggle-pwd').forEach(eye => {
+    eye.addEventListener('click', () => {
+      const target = document.getElementById(eye.dataset.target);
+      const isText = target.type === 'text';
+      target.type  = isText ? 'password' : 'text';   // on bascule
+      eye.classList.toggle('fa-eye-slash', !isText);
+      eye.classList.toggle('fa-eye', isText);
+    });
+  });
+});
+</script>

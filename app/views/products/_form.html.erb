@@ -1,0 +1,96 @@
+<!-- app/views/products/_form.html.erb -->
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">EDITION</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: product, local: true, html: { multipart: true }) do |f| %>
+           
+
+            <div class="row g-3">
+              <div class="col-md-8">
+                <%= f.label :title, "Titre", class: "form-label fw-bold" %>
+                <%= f.text_field :title, class: "form-control", required: true %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :product_category_id, "Catégorie", class: "form-label fw-bold" %>
+                <%= f.select :product_category_id,
+                             options_from_collection_for_select(ProductCategory.order(:name), :id, :name, product.product_category_id),
+                             { include_blank: "— Aucune —" },
+                             class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :description, "Description", class: "form-label fw-bold" %>
+              <%= f.text_area :description, class: "tinymce", value: f.object.description %>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <%= f.label :price, "Prix réel (#{devise})", class: "form-label fw-bold" %>
+                <div class="input-group"><span class="input-group-text"><%=devise%></span><%= f.number_field :price, class: "form-control", step: 0.01, min: 0, required: true %></div>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :reduced_price, "Prix réduit (#{devise})", class: "form-label fw-bold" %>
+                <div class="input-group"><span class="input-group-text"><%=devise%></span><%= f.number_field :reduced_price, class: "form-control", step: 0.01, min: 0 %></div>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :stock, "Stock", class: "form-label fw-bold" %>
+                <%= f.number_field :stock, class: "form-control", min: 0 %>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <%= f.label :status, "Statut", class: "form-label fw-bold" %>
+                <%= f.select :status, options_for_select(Product.statuses.keys.map { |s| [Product.human_attribute_name("status.#{s}"), s] }, product.status), {}, class: "form-select" %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :image, "Image du produit", class: "form-label fw-bold" %>
+                <%= f.file_field :image, class: "form-control", accept: "image/*" %>
+                <!-- par CE BLOC (preview + image actuelle si existe) -->
+                <div class="mt-3">
+                  <% if product.image.attached? %>
+                    <p class="mb-2">Image actuelle :</p>
+                    <%= image_tag product.image, class: "img-thumbnail mb-2", width: 200, id: "imagePreview" %>
+                  <% else %>
+                    <p class="mb-2">Aperçu :</p>
+                    <img id="imagePreview" src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="img-thumbnail mb-2" width="200" alt="Aperçu">
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <%= f.submit "Sauvegarder", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- juste après la fermeture du form_with -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fileInput = document.querySelector('input[type="file"][name="product[image]"]');
+  const preview   = document.getElementById('imagePreview');
+  if (!fileInput || !preview) return;
+
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = e => preview.src = e.target.result;
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = "<%= asset_path('livre1.jpg') %>"; // image par défaut si vous en avez une
+    }
+  });
+});
+</script>

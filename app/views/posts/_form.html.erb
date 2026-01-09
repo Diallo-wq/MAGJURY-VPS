@@ -1,0 +1,188 @@
+
+
+
+<%# app/views/posts/_form.html.erb – TinyMCE + erreurs + pré-remplissage %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+:root{
+  --joy:#ff6f61;
+  --joy-dark:#e55a4f;
+  --bg:#fffaf5;
+  --radius:8px;
+  --shadow:0 8px 25px rgba(0,0,0,.08);
+  --sidebar:240px;
+  --error:#e74c3c;
+}
+* {box-sizing:border-box;font-family:'Quicksand',sans-serif;}
+body{margin:0;background:var(--bg);}
+.editor-frame{display:flex;height:100vh;flex-direction:row-reverse;}
+.sidebar{width:var(--sidebar);background:#23282d;color:#eee;padding:1rem;display:flex;flex-direction:column;}
+.sidebar.collapsed{margin-right:calc(-1 * var(--sidebar));}
+.sidebar h3{margin:0 0 .8rem;font-size:1.1rem;color:var(--joy);}
+.sidebar .field{margin-bottom:1rem;}
+.sidebar label{font-size:.75rem;text-transform:uppercase;margin-bottom:.3rem;display:block;}
+.sidebar input,.sidebar select{width:100%;padding:.5rem;border:none;border-radius:var(--radius);font-size:.85rem;}
+.main-area{flex:1;display:flex;flex-direction:column;background:#fff;}
+.top-bar{background:#0d58e7;color:#fff;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;}
+.toggle-btn{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;}
+.publish-box{display:flex;gap:.5rem;}
+.publish-box button{background:#fff;color:var(--joy);border:none;border-radius:20px;padding:.4rem 1rem;font-weight:600;cursor:pointer;}
+#publish-btn{background:none;color:#fff;border:1px solid #fff; padding: 10px; border-radius:15px;}
+.editor-wrapper{flex:1;display:flex;flex-direction:column;padding:1.5rem;}
+#post_title{font-size:2rem;font-weight:700;border:none;border-bottom:2px solid transparent;transition:border .3s;padding:.2rem 0;width:100%;}
+#post_title:focus{outline:none;border-color:var(--joy);}
+#cover_preview img{max-width:220px;border-radius:var(--radius);margin-top:.5rem;}
+.no-img-txt{font-size:.7rem;color:#aaa;}
+.error-text{color:var(--error);font-size:.75rem;margin-top:.25rem;display:block;}
+
+/* mobile */
+@media (max-width:768px){
+  :root{--sidebar:100%;}
+  .editor-frame{flex-direction:column;}
+  .sidebar{position:fixed;bottom:0;left:0;right:0;height:45vh;overflow-y:auto;border-top:2px solid var(--joy);z-index:20;}
+  .sidebar.collapsed{transform:translateY(100%);}
+  .top-bar{z-index:25;}
+  #post_title{font-size:1.5rem;}
+}
+</style>
+
+<%= form_with model: post, local: true, html: { id: 'post_form' } do |f| %>
+<div class="editor-frame">
+  <!-- Sidebar DROITE -->
+  <aside class="sidebar" id="sidebar">
+    <h3>Paramètres</h3>
+
+    <!-- IMAGE + PREVIEW -->
+    <div class="field">
+      <%= f.label :status %>
+      <%= f.select :status, Post.statuses.keys.map { |k| [k.humanize, k] } %>
+    </div>
+
+    <div class="field">
+      <%= f.label :cover_image %>
+      <%= f.file_field :cover_image, accept: "image/*", id: "cover_upload" %>
+      <div id="cover_preview">
+        <% if f.object.cover_image.attached? %>
+          <%= image_tag url_for(@post.cover_image), width: 220, crop: :fill %>
+        <% else %>
+          <span class="no-img-txt">Aperçu ici…</span>
+        <% end %>
+      </div>
+      <% if f.object.errors[:cover_image].any? %>
+        <span class="error-text"><%= f.object.errors[:cover_image].to_sentence %></span>
+      <% end %>
+    </div>
+
+    <!-- CATEGORIE -->
+    <div class="field">
+      <%= f.label :category_id, "Catégorie existante" %>
+      <%= f.collection_select :category_id, Category.order(:name), :id, :name, { include_blank: true } %>
+      <% if f.object.errors[:category_id].any? %>
+        <span class="error-text"><%= f.object.errors[:category_id].to_sentence %></span>
+      <% end %>
+    </div>
+
+    <div class="field">
+      <%= f.label :new_category_name, "Nouvelle catégorie" %>
+      <%= f.text_field :new_category_name, placeholder: "ex: Rails" %>
+      <% if f.object.errors[:new_category_name].any? %>
+        <span class="error-text"><%= f.object.errors[:new_category_name].to_sentence %></span>
+      <% end %>
+    </div>
+
+    <!-- TAGS -->
+    <div class="field">
+      <%= f.label :new_tag_names, "Tags (séparés par des virgules)" %>
+      <%= f.text_field :new_tag_names, placeholder: "rails, hotwire", value: f.object.new_tag_names %>
+    </div>
+
+    <!-- SLUG -->
+    <div class="field">
+      <%= f.label :slug, "Slug (facultatif)" %>
+      <%= f.text_field :slug, placeholder: "mon-article" %>
+    </div>
+
+    <div class="field">
+      <%= f.check_box :featured, style: "width:initial;" %>
+      <%= f.label :featured, "Mettre en avant", style: "display:inline;" %>
+    </div>
+  </aside>
+
+  <!-- ZONE CENTRALE -->
+  <div class="main-area">
+    <div class="top-bar">
+      <button type="button" class="toggle-btn" id="toggle-btn">☰</button>
+      <div class="publish-box">
+        <%= f.submit "SAUVEGARDER", id: "publish-btn" %>
+      </div>
+    </div>
+
+    <!-- TinyMCE -->
+    <div class="editor-wrapper">
+      <%= f.text_field :title, placeholder: "Ajoute un titre…", autocomplete: "off" %>
+      <%= f.label :content, "Corps de l’article" %>
+      <%= f.text_area :content, id: "post_content", class: "tinymce", value: f.object.content %>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* 1. Sidebar toggle */
+document.getElementById('toggle-btn').onclick = () => {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+};
+
+/* 2. Preview image */
+document.getElementById('cover_upload').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const preview = document.getElementById('cover_preview');
+  preview.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  preview.appendChild(img);
+});
+
+/* 3. Sauvegarde manuelle – brouillon */
+
+/* 4. Sauvegarde manuelle – publier */
+document.getElementById('publish-btn').onclick = () => savePost('published');
+
+function savePost(wantedStatus) {
+  const form = document.getElementById('post_form');
+  const data = new FormData(form);
+  data.set('post[status]', wantedStatus);
+
+  fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  })
+    .then(r => {
+      if (!r.ok) throw r; // validation échouée
+      return r.json();
+    })
+    .then(json => {
+      // succès : redirect vers show
+      if (json.location) {
+        window.location.href = json.location;
+      } else {
+        alert(wantedStatus === 'draft' ? 'Brouillon enregistré ✨' : 'Article publié 🎉');
+      }
+    })
+    .catch(async resp => {
+      // on réinjecte le formulaire avec les erreurs + valeurs pré-remplies
+      const html = await resp.text();
+      const newDoc = new DOMParser().parseFromString(html, 'text/html');
+      const newForm = newDoc.querySelector('form');
+      if (newForm) form.outerHTML = newForm.outerHTML;
+      else alert('Erreur inconnue');
+    });
+}
+
+/* 5. Supprime barre native vide (évite double barre) */
+const bars = document.querySelectorAll('trix-toolbar');
+bars.forEach(b => { if (!b.querySelector('.trix-button-row')) b.remove(); });
+</script>
+<% end %>

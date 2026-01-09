@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  post: one
+  user: one
+  guest_name: MyString
+  guest_email: MyString
+  body: MyText
+  parent_id: 1
+
+two:
+  post: two
+  user: two
+  guest_name: MyString
+  guest_email: MyString
+  body: MyText
+  parent_id: 1
