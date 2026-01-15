@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
 
     if @comment.save
       respond_to do |format|
-        format.html { redirect_to success_post_comments_path(@post.slug) }
+        format.html { redirect_to post_comment_success_path(@post.slug) }
         format.js { render partial: 'comments/comment', locals: { comment: @comment } }
       end
     else
