@@ -94,7 +94,7 @@
 
 <div class="success-container">
     <div class="container d-flex justify-content-center">
-        <div class="success-card" data-aos="fade-up">
+        <div class="success-card">
             <div class="success-icon">
                 <i class="fas fa-check"></i>
             </div>
@@ -107,7 +107,7 @@
             </p>
 
             <div class="actions">
-                <%= link_to post_path(@post), class: "btn-return" do %>
+                <%= link_to post_path(@post.slug), class: "btn-return" do %>
                     <i class="fas fa-arrow-left"></i> Retourner à l'article
                 <% end %>
             </div>
