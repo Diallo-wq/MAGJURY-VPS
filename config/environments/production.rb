@@ -90,4 +90,9 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Autorisation du sous-domaine
+  config.hosts << "magjury.org"
+  config.hosts << "www.magjury.org"
+  config.hosts << "test.magjury.org"
 end
