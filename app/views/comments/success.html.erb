@@ -1,0 +1,120 @@
+<%# app/views/comments/success.html.erb %>
+<%= render 'layouts/home_header' %>
+
+<style>
+    :root {
+        --magjury-gold: #c9a96e;
+        --magjury-dark: #0a0a12;
+        --magjury-dark-light: #1a1a24;
+        --magjury-light: #f8f9fa;
+    }
+
+    .success-container {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+        background: var(--magjury-light);
+    }
+
+    .success-card {
+        background: white;
+        border-radius: 20px;
+        padding: 60px 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+        border-top: 5px solid var(--magjury-gold);
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: #28a745;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 30px;
+        animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
+    }
+
+    .success-title {
+        color: var(--magjury-dark);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .success-message {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .btn-return {
+        background: var(--magjury-gold);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: none;
+    }
+
+    .btn-return:hover {
+        background: #a8874c;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(201, 169, 110, 0.4);
+    }
+
+    .article-preview {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #eee;
+        font-style: italic;
+        color: #888;
+    }
+</style>
+
+<div class="success-container">
+    <div class="container d-flex justify-content-center">
+        <div class="success-card" data-aos="fade-up">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <h1 class="success-title">Merci !</h1>
+            
+            <p class="success-message">
+                Votre commentaire a été ajouté avec succès à l'article. 
+                Il est désormais visible par la communauté Magjury.
+            </p>
+
+            <div class="actions">
+                <%= link_to post_path(@post), class: "btn-return" do %>
+                    <i class="fas fa-arrow-left"></i> Retourner à l'article
+                <% end %>
+            </div>
+
+            <div class="article-preview">
+                Article : <strong><%= @post.title %></strong>
+            </div>
+        </div>
+    </div>
+</div>

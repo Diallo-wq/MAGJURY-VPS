@@ -4,16 +4,25 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: [:flag]
 
   def create
-    Rails.logger.debug "======== params = #{params.inspect} ========"
     @post = Post.find_by!(slug: params[:post_slug])
     @comment = @post.comments.build(comment_params)
     @comment.user = current_user if user_signed_in?
 
     if @comment.save
-      render partial: 'comments/comment', locals: { comment: @comment }
+      respond_to do |format|
+        format.html { redirect_to success_post_comments_path(@post.slug) }
+        format.js { render partial: 'comments/comment', locals: { comment: @comment } }
+      end
     else
-      render partial: 'comments/errors', locals: { comment: @comment }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to post_path(@post.slug), alert: "Erreur lors de l'envoi du commentaire." }
+        format.js { render partial: 'comments/errors', locals: { comment: @comment }, status: :unprocessable_entity }
+      end
     end
+  end
+
+  def success
+    @post = Post.find_by!(slug: params[:post_slug])
   end
 
   def flag

@@ -36,6 +36,9 @@ get "encheres", to: "encheres#index", as: :encheres
 
   resources :posts, param: :slug do
     resources :comments, only: [:create], shallow: true do
+      collection do
+        get :success
+      end
       member do
         post :flag
       end
